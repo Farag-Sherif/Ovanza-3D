@@ -1,0 +1,227 @@
+@import "tailwindcss";
+@import "@fontsource/ibm-plex-sans-arabic/300.css";
+@import "@fontsource/ibm-plex-sans-arabic/400.css";
+@import "@fontsource/ibm-plex-sans-arabic/500.css";
+@import "@fontsource/ibm-plex-sans-arabic/600.css";
+@import "@fontsource/ibm-plex-sans-arabic/700.css";
+@import "@fontsource/manrope/300.css";
+@import "@fontsource/manrope/400.css";
+@import "@fontsource/manrope/500.css";
+@import "@fontsource/manrope/600.css";
+@import "@fontsource/manrope/700.css";
+@import "@fontsource/manrope/800.css";
+@import "@fontsource/cormorant-garamond/400.css";
+@import "@fontsource/cormorant-garamond/500.css";
+@import "@fontsource/cormorant-garamond/600.css";
+@import "@fontsource/cormorant-garamond/400-italic.css";
+
+/* ============================================================
+   OVANZA DESIGN TOKENS
+   ============================================================ */
+@theme {
+  --color-espresso-950: #0d0b09;
+  --color-espresso-900: #14110d;
+  --color-espresso-850: #1a1511;
+  --color-espresso-800: #221c15;
+  --color-espresso-700: #332a1f;
+  --color-gold-300: #ecd9ac;
+  --color-gold-400: #dfc284;
+  --color-gold-500: #d4a95c;
+  --color-gold-600: #b98a3e;
+  --color-cream-50: #faf6ee;
+  --color-cream-100: #f2ead9;
+  --color-cream-300: #d8cdb6;
+  --color-cream-500: #a2967f;
+
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", serif;
+}
+
+/* ============================================================
+   DUAL TYPE SCALE — Arabic gets a calmer, smaller scale
+   ============================================================ */
+:root {
+  --fs-ar: 1;
+  --lh-display: 1.04;
+  --lh-body: 1.6;
+}
+
+html[lang="ar"] {
+  --fs-ar: 0.86;
+  --lh-display: 1.26;
+  --lh-body: 1.95;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: #0d0b09;
+}
+
+body {
+  font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  background: var(--color-espresso-950);
+  color: var(--color-cream-100);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+html[lang="ar"] body {
+  font-family: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0 !important;
+}
+
+/* Fluid display sizes — every size multiplies by --fs-ar */
+.t-hero   { font-size: calc(clamp(2.6rem, 8.5vw, 6.8rem) * var(--fs-ar)); line-height: var(--lh-display); }
+.t-h1     { font-size: calc(clamp(2.2rem, 5.5vw, 4.4rem) * var(--fs-ar)); line-height: var(--lh-display); }
+.t-h2     { font-size: calc(clamp(1.8rem, 4vw, 3.2rem) * var(--fs-ar)); line-height: var(--lh-display); }
+.t-h3     { font-size: calc(clamp(1.3rem, 2.4vw, 2rem) * var(--fs-ar)); line-height: calc(var(--lh-display) * 1.1); }
+.t-lead   { font-size: calc(clamp(1.05rem, 1.6vw, 1.35rem) * var(--fs-ar)); line-height: var(--lh-body); }
+.t-body   { font-size: calc(clamp(0.95rem, 1.1vw, 1.08rem) * var(--fs-ar)); line-height: var(--lh-body); }
+.t-small  { font-size: calc(clamp(0.82rem, 0.95vw, 0.92rem) * var(--fs-ar)); line-height: 1.7; }
+
+.t-label {
+  font-size: calc(0.78rem * var(--fs-ar));
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+html[lang="ar"] .t-label { letter-spacing: 0.06em; text-transform: none; font-weight: 500; }
+
+.font-display { font-family: "Cormorant Garamond", serif; }
+html[lang="ar"] .font-display { font-family: "IBM Plex Sans Arabic", ui-sans-serif, sans-serif; font-weight: 600; }
+
+/* ============================================================
+   LAYOUT UTILITIES (raw CSS — no @apply for build safety)
+   ============================================================ */
+.container-ov { margin-inline: auto; width: 100%; max-width: 1440px; padding-inline: 1.25rem; }
+@media (min-width: 640px)  { .container-ov { padding-inline: 2rem; } }
+@media (min-width: 1024px) { .container-ov { padding-inline: 3.5rem; } }
+
+.gold-text {
+  background: linear-gradient(115deg, #ecd9ac 0%, #d4a95c 45%, #f6ecd4 70%, #b98a3e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glass {
+  background: rgba(20, 17, 13, 0.6);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+}
+
+.card-surface {
+  background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.7rem;
+  border-radius: 999px; padding: 1rem 2.1rem;
+  font-size: calc(0.95rem * var(--fs-ar)); font-weight: 700;
+  background: linear-gradient(120deg, #d4a95c, #ecd9ac 55%, #b98a3e);
+  color: #171208;
+  box-shadow: 0 10px 40px -12px rgba(212, 169, 92, 0.55);
+  transition: transform 0.45s cubic-bezier(0.22,1,0.36,1), box-shadow 0.45s;
+  cursor: pointer;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 55px -12px rgba(212,169,92,0.75); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.7rem;
+  border-radius: 999px; padding: 1rem 2.1rem;
+  font-size: calc(0.95rem * var(--fs-ar)); font-weight: 600;
+  border: 1px solid rgba(242, 234, 217, 0.3);
+  color: var(--color-cream-100);
+  transition: all 0.45s cubic-bezier(0.22,1,0.36,1);
+  cursor: pointer;
+}
+.btn-ghost:hover { border-color: #d4a95c; color: #ecd9ac; transform: translateY(-2px); }
+
+/* Inputs */
+.field {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  padding: 1rem 1.25rem;
+  outline: none;
+  font-family: inherit;
+  font-size: calc(0.95rem * var(--fs-ar));
+  color: var(--color-cream-50);
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+.field::placeholder { color: rgba(216, 205, 182, 0.4); }
+.field:focus { border-color: rgba(212,169,92,0.6); background: rgba(255,255,255,0.06); box-shadow: 0 0 0 4px rgba(212,169,92,0.08); }
+.field-label { display: block; margin-bottom: 0.5rem; font-size: calc(0.85rem * var(--fs-ar)); color: var(--color-cream-300); }
+
+select.field {
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23d4a95c' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.25rem center;
+  padding-inline-end: 2.75rem;
+}
+html[dir="rtl"] select.field { background-position: left 1.25rem center; padding-inline-end: 1.25rem; padding-inline-start: 2.75rem; }
+select.field option { background: #1a1511; color: #f2ead9; }
+
+textarea.field { min-height: 8rem; resize: vertical; }
+
+/* Link underline sweep */
+.u-sweep { position: relative; }
+.u-sweep::after {
+  content: ""; position: absolute; inset-inline-start: 0; bottom: -4px;
+  height: 1px; width: 100%; background: #d4a95c;
+  transform: scaleX(0); transform-origin: center;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.u-sweep:hover::after, .u-sweep.active::after { transform: scaleX(1); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #0d0b09; }
+::-webkit-scrollbar-thumb { background: #332a1f; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #b98a3e; }
+
+::selection { background: rgba(212,169,92,0.35); color: #faf6ee; }
+:focus-visible { outline: 2px solid #d4a95c; outline-offset: 3px; border-radius: 6px; }
+
+/* Horizontal scroll strips */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Marquee */
+@keyframes ov-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-track { animation: ov-marquee 46s linear infinite; }
+html[dir="rtl"] .marquee-track { animation-name: ov-marquee-rtl; }
+@keyframes ov-marquee-rtl { from { transform: translateX(0); } to { transform: translateX(50%); } }
+.marquee-paused:hover .marquee-track { animation-play-state: paused; }
+
+/* Scroll cue line */
+@keyframes ov-scrollcue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  45% { transform: scaleY(1); transform-origin: top; }
+  55% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.scroll-cue::after {
+  content: ""; display: block; width: 1px; height: 64px;
+  background: linear-gradient(to bottom, #d4a95c, transparent);
+  animation: ov-scrollcue 2.2s cubic-bezier(0.65,0,0.35,1) infinite;
+}
+
+/* Rich text from API */
+.rich-text p { margin-bottom: 0.8em; }
+.rich-text strong { color: #ecd9ac; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

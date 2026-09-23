@@ -1,0 +1,1 @@
+const s={progress:0,velocity:0};let n=0;function l(){const o=()=>{const e=document.documentElement.scrollHeight-window.innerHeight,t=window.scrollY;s.velocity=Math.abs(t-n),n=t,s.progress=e>0?Math.min(1,Math.max(0,t/e)):0};return o(),window.addEventListener("scroll",o,{passive:!0}),()=>window.removeEventListener("scroll",o)}export{l as i,s};
