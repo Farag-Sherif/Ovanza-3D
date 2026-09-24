@@ -45,12 +45,12 @@ export default function Header() {
       >
         <div className="container-ov flex items-center justify-between gap-6">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3" aria-label="Ovanza Cosmetics">
+          <Link to="/" className="flex items-center gap-3 shrink-0" aria-label="Ovanza Cosmetics">
             {settings?.image_logo_path ? (
               <img
                 src={settings.image_logo_path}
                 alt="Ovanza"
-                className="h-10 w-auto object-contain md:h-11"
+                className="h-12 w-auto object-contain shrink-0 md:h-16"
                 onError={(e) => ((e.target as HTMLImageElement).style.display = "none")}
               />
             ) : (
@@ -89,7 +89,7 @@ export default function Header() {
             </button>
 
             {/* CTA */}
-            <Link to="/contact" className="btn-primary hidden !py-2.5 !px-6 text-sm lg:inline-flex">
+            <Link to="/contact" className="btn-primary !hidden !py-2.5 !px-6 text-sm xl:!inline-flex whitespace-nowrap">
               {t("nav.partner")}
               {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
             </Link>

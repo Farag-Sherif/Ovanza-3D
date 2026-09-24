@@ -121,7 +121,8 @@ export async function fetchSettings(locale: string): Promise<RawSettings | null>
   const { data } = await axiosInstance.get("/settings");
   const s = data?.settings ?? data;
   if (!s) return null;
-  return { ...s, about_us: tr(s.translations, "notes", locale) || s.about_us };
+  // @ts-ignore (ignoring that about_us is not in the Translation interface to fix the mapping)
+  return { ...s, about_us: tr(s.translations, "about_us", locale) || s.about_us };
 }
 
 export async function fetchBrands(locale: string): Promise<RawBrand[]> {
@@ -131,7 +132,7 @@ export async function fetchBrands(locale: string): Promise<RawBrand[]> {
     ...b,
     name: tr(b.translations, "name", locale) || b.name,
     logo_path: cdnUrl(b.logo) || b.logo_path,
-    cover: b.cover || null,
+    cover: cdnUrl(b.cover),
   }));
 }
 
@@ -148,6 +149,7 @@ export async function fetchCategories(locale: string): Promise<RawCategory[]> {
     name: tr(c.translations, "name", locale) || c.name,
     logo_path: cdnUrl(c.logo) || c.logo_path,
     icon_path: c.icon && c.icon !== c.logo ? cdnUrl(c.icon) : null,
+    cover: cdnUrl(c.cover),
   }));
 }
 
@@ -182,9 +184,14 @@ export async function fetchPartners(): Promise<RawPartner[]> {
   return Array.isArray(data) ? data : [];
 }
 
-export async function fetchBlogs(): Promise<RawBlog[]> {
+export async function fetchBlogs(locale: string): Promise<RawBlog[]> {
   const { data } = await axiosInstance.get("/blogs");
-  return Array.isArray(data) ? data : (data?.data ?? []);
+  const list = Array.isArray(data) ? data : (data?.data ?? []);
+  return list.map((b: any) => ({
+    ...b,
+    title: tr(b.translations, "title", locale) || b.title,
+    content: tr(b.translations, "content", locale) || b.content,
+  }));
 }
 
 /* Existing contact endpoint — payload contract preserved exactly */

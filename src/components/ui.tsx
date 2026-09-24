@@ -204,7 +204,7 @@ export function PageHero({
   image?: string | null;
 }) {
   return (
-    <section className="relative flex min-h-[62svh] items-end overflow-hidden pt-32 pb-16">
+    <section className="relative flex min-h-[45svh] items-end overflow-hidden pt-32 pb-16">
       {image && (
         <>
           <Img src={image} alt={title} className="absolute inset-0 h-full w-full" eager />
