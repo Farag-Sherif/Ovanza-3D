@@ -176,7 +176,11 @@ export async function fetchProducts(locale: string): Promise<RawProduct[]> {
 
 export async function fetchSocials(): Promise<RawSocial[]> {
   const { data } = await axiosInstance.get("/socails");
-  return Array.isArray(data) ? data : [];
+  const list = Array.isArray(data) ? data : [];
+  return list.map((s: RawSocial) => ({
+    ...s,
+    icon_path: cdnUrl(s.icon) || s.icon_path,
+  }));
 }
 
 export async function fetchPartners(): Promise<RawPartner[]> {

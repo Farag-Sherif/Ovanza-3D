@@ -26,18 +26,20 @@ export default function Footer() {
           <p className="t-body max-w-sm text-cream-300/70">{t("hero.sub")}</p>
           <div className="mt-8 flex flex-col gap-3">
             {settings?.phone && (
-              <a href={`tel:+${settings.phone}`} className="u-sweep t-small inline-flex items-center gap-3 text-cream-300/80" dir="ltr">
-                <Phone className="h-4 w-4 text-gold-500" /> +{settings.phone}
+              <a href={`tel:+${settings.phone}`} className="u-sweep t-small inline-flex items-center gap-3 text-cream-300/80">
+                <Phone className="h-4 w-4 shrink-0 text-gold-500" />
+                <span dir="ltr">+{settings.phone}</span>
               </a>
             )}
             {settings?.email && (
               <a href={`mailto:${settings.email}`} className="u-sweep t-small inline-flex items-center gap-3 text-cream-300/80">
-                <Mail className="h-4 w-4 text-gold-500" /> {settings.email}
+                <Mail className="h-4 w-4 shrink-0 text-gold-500" />
+                <span dir="ltr">{settings.email}</span>
               </a>
             )}
             {settings?.addresse && (
               <span className="t-small inline-flex items-center gap-3 text-cream-300/80">
-                <MapPin className="h-4 w-4 text-gold-500" /> {settings.addresse.replace("_", ", ")}
+                <MapPin className="h-4 w-4 shrink-0 text-gold-500" /> {settings.addresse.replace("_", "، ")}
               </span>
             )}
           </div>
@@ -79,7 +81,7 @@ export default function Footer() {
                 aria-label="Ovanza social link"
               >
                 {s.icon_path ? (
-                  <img src={s.icon_path} alt="" className="h-4.5 w-4.5 h-5 w-5 object-contain invert" loading="lazy" />
+                  <img src={s.icon_path} alt="" className="h-5 w-5 object-contain" loading="lazy" />
                 ) : (
                   <span className="font-display text-sm text-gold-400">O</span>
                 )}

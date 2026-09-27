@@ -4,33 +4,63 @@ import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { scrollBus } from "../../lib/scrollBus";
 
+/* ── 5 themes matching the 5 jar variants (4 Star Seven + 1 Spider Wax) ── */
+const JAR_COUNT = 5;
 const THEMES = [
-  { 
-    color: new THREE.Color("#ffb300"), 
-    fog: new THREE.Color("#1a1000"),
-    bgInner: "#2a1b00", bgMid: "#120a00", bgOuter: "#000000"
-  }, // Yellow Theme
-  { 
-    color: new THREE.Color("#e91e63"), 
-    fog: new THREE.Color("#1a0008"),
-    bgInner: "#2a0011", bgMid: "#120008", bgOuter: "#000000"
-  }, // Black/Pink Theme
-  { 
-    color: new THREE.Color("#03a9f4"), 
-    fog: new THREE.Color("#00111a"),
-    bgInner: "#001f33", bgMid: "#000a12", bgOuter: "#000000"
-  }, // Blue Theme
   {
-    color: new THREE.Color("#e91e63"), 
-    fog: new THREE.Color("#00111a"),
-    bgInner: "#001f33", bgMid: "#000a12", bgOuter: "#000000"
-  }, // Blue Star Seven (Blue bg, pink leaves)
+    // Red jar
+    fog: new THREE.Color("#4a0015"),
+    bgInner: "#8b1a2b", bgMid: "#4a0015", bgOuter: "#1a0008",
+  },
   {
-    color: new THREE.Color("#03a9f4"), 
-    fog: new THREE.Color("#1a1000"),
-    bgInner: "#2a1b00", bgMid: "#120a00", bgOuter: "#000000"
-  }, // Yellow Star Seven (Yellow bg, blue leaves)
+    // Black jar
+    fog: new THREE.Color("#1a1a1a"),
+    bgInner: "#333333", bgMid: "#1a1a1a", bgOuter: "#080808",
+  },
+  {
+    // Blue jar
+    fog: new THREE.Color("#0a3a5c"),
+    bgInner: "#1565c0", bgMid: "#0a3a5c", bgOuter: "#041520",
+  },
+  {
+    // Yellow jar
+    fog: new THREE.Color("#5c4a00"),
+    bgInner: "#c49000", bgMid: "#5c4a00", bgOuter: "#1a1400",
+  },
+  {
+    // Spider Wax (Blue/Coconut)
+    fog: new THREE.Color("#0d2e4f"),
+    bgInner: "#1a5b9c", bgMid: "#0d2e4f", bgOuter: "#040e1a",
+  },
 ];
+
+/* ── Bottom-base colors matching each jar variant ── */
+const BOTTOM_COLORS = [
+  new THREE.Color("#eb1933"), // Red
+  new THREE.Color("#1a1a1a"), // Black
+  new THREE.Color("#1565c0"), // Blue
+  new THREE.Color("#f9a825"), // Yellow
+];
+
+/* ── Module-level bus: SceneContent writes, StarSevenWaxJar reads ── */
+const jarColorBus = { activeIndex: 0 };
+
+/* ── How long to hold each color before triggering a spin swap ── */
+const COLOR_HOLD_SECONDS = 4;
+
+/* ── Texture paths for each jar color variant [top, body, lid-side] ── */
+const JAR_TEXTURE_PATHS = [
+  /* 0 = Red */
+  ["/assets/star-seven/top.png", "/assets/star-seven/body.png", "/assets/star-seven/lid-side.jpg"],
+  /* 1 = Black */
+  ["/assets/star-seven/Hair WAX premium metal-03.png", "/assets/star-seven/Hair WAX premium metal-05.png", "/assets/star-seven/Hair WAX premium metal-04.png"],
+  /* 2 = Blue */
+  ["/assets/star-seven/Hair WAX premium metal-06.png", "/assets/star-seven/Hair WAX premium metal-08.png", "/assets/star-seven/Hair WAX premium metal-07.png"],
+  /* 3 = Yellow */
+  ["/assets/star-seven/Hair WAX premium metal-10.png", "/assets/star-seven/Hair WAX premium metal-09.png", "/assets/star-seven/Hair WAX premium metal-11.png"],
+] as const;
+
+/* ================================================================ */
 
 function SpiderWaxJar(props: any) {
   const [sideTex, topTex] = useTexture([
@@ -68,58 +98,294 @@ function SpiderWaxJar(props: any) {
   );
 }
 
-function StarSevenWaxJar(props: any) {
-  const [topTex, bodyTex, lidSideTex] = useTexture([
-    "/assets/star-seven/top.png",
-    "/assets/star-seven/body.png",
-    "/assets/star-seven/lid-side.jpg"
-  ]);
+/* ── Small orbiting Spider Wax jar ── */
+/* Hides itself when its colorIndex matches the big jar's active color */
+function SmallSpiderWaxJar({ colorIndex, ...props }: { colorIndex: number } & Record<string, any>) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    if (!groupRef.current) return;
+    const shouldHide = jarColorBus.activeIndex === colorIndex;
+    const target = shouldHide ? 0.001 : 1;
+    const s = groupRef.current.scale.x;
+    groupRef.current.scale.setScalar(THREE.MathUtils.lerp(s, target, 0.08));
+  });
 
   return (
     <group {...props}>
+      <group ref={groupRef}>
+        <SpiderWaxJar />
+      </group>
+    </group>
+  );
+}
+
+/* ── Small orbiting Star Seven jar with a fixed color variant ── */
+/* Hides itself when its colorIndex matches the big jar's active color */
+function SmallStarSevenJar({ colorIndex, ...props }: { colorIndex: number } & Record<string, any>) {
+  const [topTex, bodyTex, lidSideTex] = useTexture(
+    JAR_TEXTURE_PATHS[colorIndex] as unknown as string[]
+  );
+  const bottomColor = BOTTOM_COLORS[colorIndex];
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    if (!groupRef.current) return;
+    // Hide when this color matches the currently displayed big jar
+    const shouldHide = jarColorBus.activeIndex === colorIndex;
+    const target = shouldHide ? 0.001 : 1;
+    const s = groupRef.current.scale.x;
+    groupRef.current.scale.setScalar(THREE.MathUtils.lerp(s, target, 0.08));
+  });
+
+  return (
+    <group {...props}>
+      <group ref={groupRef}>
+        {/* Top Lid Surface */}
+        <mesh position={[0, 0.285, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.7, 64]} />
+          <meshStandardMaterial map={topTex} roughness={0.2} metalness={0.1} />
+        </mesh>
+
+        {/* Lid Rim (Side) */}
+        <mesh position={[0, 0.185, 0]}>
+          <cylinderGeometry args={[0.7, 0.7, 0.2, 64, 1, true]} />
+          <meshStandardMaterial map={lidSideTex} roughness={0.2} metalness={0.1} />
+        </mesh>
+
+        {/* Metal Seam */}
+        <mesh position={[0, 0.075, 0]}>
+          <cylinderGeometry args={[0.675, 0.675, 0.02, 64, 1, true]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.3} metalness={0.5} />
+        </mesh>
+
+        {/* Body */}
+        <mesh position={[0, -0.21, 0]}>
+          <cylinderGeometry args={[0.68, 0.68, 0.55, 64, 1, true]} />
+          <meshStandardMaterial map={bodyTex} roughness={0.2} metalness={0.1} />
+        </mesh>
+
+        {/* Bottom Base */}
+        <mesh position={[0, -0.485, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.68, 64]} />
+          <meshStandardMaterial color={bottomColor} roughness={0.4} metalness={0.1} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+function JarVariantLayer({
+  topTex,
+  bodyTex,
+  lidSideTex,
+  bottomColor,
+  variantIndex,
+  materialStore,
+}: {
+  topTex: THREE.Texture;
+  bodyTex: THREE.Texture;
+  lidSideTex: THREE.Texture;
+  bottomColor: THREE.Color;
+  variantIndex: number;
+  materialStore: React.RefObject<Record<number, THREE.MeshStandardMaterial[]>>;
+}) {
+  const topMatRef = useRef<THREE.MeshStandardMaterial>(null);
+  const lidMatRef = useRef<THREE.MeshStandardMaterial>(null);
+  const bodyMatRef = useRef<THREE.MeshStandardMaterial>(null);
+  const bottomMatRef = useRef<THREE.MeshStandardMaterial>(null);
+
+  /* Register material refs on mount */
+  useFrame(() => {
+    const store = materialStore.current;
+    if (store && !store[variantIndex]) {
+      if (topMatRef.current && lidMatRef.current && bodyMatRef.current && bottomMatRef.current) {
+        store[variantIndex] = [topMatRef.current, lidMatRef.current, bodyMatRef.current, bottomMatRef.current];
+      }
+    }
+  });
+
+  return (
+    <>
       {/* Top Lid Surface */}
       <mesh position={[0, 0.285, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.7, 64]} />
-        <meshStandardMaterial map={topTex} roughness={0.2} metalness={0.1} />
+        <meshStandardMaterial
+          ref={topMatRef}
+          map={topTex}
+          roughness={0.2}
+          metalness={0.1}
+          transparent
+          depthWrite={false}
+          opacity={0}
+        />
       </mesh>
-      
+
       {/* Lid Rim (Side) */}
       <mesh position={[0, 0.185, 0]}>
         <cylinderGeometry args={[0.7, 0.7, 0.2, 64, 1, true]} />
-        <meshStandardMaterial map={lidSideTex} roughness={0.2} metalness={0.1} />
-      </mesh>
-
-      {/* Metal Seam / Inner Rim */}
-      <mesh position={[0, 0.075, 0]}>
-        <cylinderGeometry args={[0.675, 0.675, 0.02, 64, 1, true]} />
-        <meshStandardMaterial color="#ffffff" roughness={0.3} metalness={0.5} />
+        <meshStandardMaterial
+          ref={lidMatRef}
+          map={lidSideTex}
+          roughness={0.2}
+          metalness={0.1}
+          transparent
+          depthWrite={false}
+          opacity={0}
+        />
       </mesh>
 
       {/* Body */}
       <mesh position={[0, -0.21, 0]}>
         <cylinderGeometry args={[0.68, 0.68, 0.55, 64, 1, true]} />
-        <meshStandardMaterial map={bodyTex} roughness={0.2} metalness={0.1} />
+        <meshStandardMaterial
+          ref={bodyMatRef}
+          map={bodyTex}
+          roughness={0.2}
+          metalness={0.1}
+          transparent
+          depthWrite={false}
+          opacity={0}
+        />
       </mesh>
-      
+
       {/* Bottom Base */}
       <mesh position={[0, -0.485, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.68, 64]} />
-        <meshStandardMaterial color="#eb1933" roughness={0.4} metalness={0.1} />
+        <meshStandardMaterial
+          ref={bottomMatRef}
+          color={bottomColor}
+          roughness={0.4}
+          metalness={0.1}
+          transparent
+          depthWrite={false}
+          opacity={0}
+        />
       </mesh>
+    </>
+  );
+}
+
+/* ================================================================ */
+/* StarSevenWaxJar — reads jarColorBus.activeIndex to swap layers    */
+/* ================================================================ */
+function StarSevenWaxJar(props: any) {
+  /* Load ALL 4 color-variant texture sets */
+  const [
+    topRed, bodyRed, lidRed,
+    topBlack, bodyBlack, lidBlack,
+    topBlue, bodyBlue, lidBlue,
+    topYellow, bodyYellow, lidYellow,
+  ] = useTexture([
+    /* Red (original) */
+    "/assets/star-seven/top.png",
+    "/assets/star-seven/body.png",
+    "/assets/star-seven/lid-side.jpg",
+    /* Black */
+    "/assets/star-seven/Hair WAX premium metal-03.png",
+    "/assets/star-seven/Hair WAX premium metal-05.png",
+    "/assets/star-seven/Hair WAX premium metal-04.png",
+    /* Blue */
+    "/assets/star-seven/Hair WAX premium metal-06.png",
+    "/assets/star-seven/Hair WAX premium metal-08.png",
+    "/assets/star-seven/Hair WAX premium metal-07.png",
+    /* Yellow */
+    "/assets/star-seven/Hair WAX premium metal-10.png",
+    "/assets/star-seven/Hair WAX premium metal-09.png",
+    "/assets/star-seven/Hair WAX premium metal-11.png",
+  ]);
+
+  /* Shared mutable store keyed by variant index → material array */
+  const materialStore = useRef<Record<number, THREE.MeshStandardMaterial[]>>({});
+
+  /* Drive opacity based on jarColorBus (set by SceneContent) */
+  useFrame(() => {
+    const store = materialStore.current;
+    if (!store) return;
+
+    const active = jarColorBus.activeIndex;
+
+    for (let i = 0; i < JAR_COUNT; i++) {
+      const mats = store[i];
+      if (!mats) continue;
+
+      const target = i === active ? 1 : 0;
+      for (const mat of mats) {
+        // Fast lerp — the spin is fast so the swap looks instant
+        mat.opacity = THREE.MathUtils.lerp(mat.opacity, target, 0.25);
+        mat.depthWrite = mat.opacity > 0.5;
+      }
+    }
+  });
+
+  return (
+    <group {...props}>
+      {/* Metal Seam / Inner Rim (shared, always visible) */}
+      <mesh position={[0, 0.075, 0]}>
+        <cylinderGeometry args={[0.675, 0.675, 0.02, 64, 1, true]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.3} metalness={0.5} />
+      </mesh>
+
+      {/* Red layer */}
+      <JarVariantLayer topTex={topRed} bodyTex={bodyRed} lidSideTex={lidRed} bottomColor={BOTTOM_COLORS[0]} variantIndex={0} materialStore={materialStore} />
+      {/* Black layer */}
+      <JarVariantLayer topTex={topBlack} bodyTex={bodyBlack} lidSideTex={lidBlack} bottomColor={BOTTOM_COLORS[1]} variantIndex={1} materialStore={materialStore} />
+      {/* Blue layer */}
+      <JarVariantLayer topTex={topBlue} bodyTex={bodyBlue} lidSideTex={lidBlue} bottomColor={BOTTOM_COLORS[2]} variantIndex={2} materialStore={materialStore} />
+      {/* Yellow layer */}
+      <JarVariantLayer topTex={topYellow} bodyTex={bodyYellow} lidSideTex={lidYellow} bottomColor={BOTTOM_COLORS[3]} variantIndex={3} materialStore={materialStore} />
     </group>
   );
 }
 
+/* ================================================================ */
+/* MainJarSwitcher — swaps between Star Seven and Spider Wax         */
+/* ================================================================ */
+function MainJarSwitcher(props: any) {
+  const starSevenRef = useRef<THREE.Group>(null);
+  const spiderWaxRef = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    const isSpider = jarColorBus.activeIndex === 4;
+    
+    if (starSevenRef.current) {
+      const s1 = starSevenRef.current.scale.x;
+      starSevenRef.current.scale.setScalar(THREE.MathUtils.lerp(s1, isSpider ? 0.001 : 1, 0.25));
+    }
+    
+    if (spiderWaxRef.current) {
+      const s2 = spiderWaxRef.current.scale.x;
+      // Scale SpiderWax up by ~1.36 to match Star Seven's physical presence
+      spiderWaxRef.current.scale.setScalar(THREE.MathUtils.lerp(s2, isSpider ? 1.36 : 0.001, 0.25));
+    }
+  });
+
+  return (
+    <group {...props}>
+      <group ref={starSevenRef}>
+        <StarSevenWaxJar />
+      </group>
+      <group ref={spiderWaxRef} scale={0.001}>
+        <SpiderWaxJar />
+      </group>
+    </group>
+  );
+}
+
+/* ================================================================ */
+/* SceneContent — orchestrates spin, jar-color swap, & background    */
+/* ================================================================ */
 function SceneContent({ bgRef }: { bgRef: React.RefObject<HTMLDivElement> }) {
   const group = useRef<THREE.Group>(null);
   const fogRef = useRef<THREE.Fog>(null);
   
+  /* ── Orbit configs: tilted elliptical paths for cinematic depth ── */
   const orbs = useMemo(() => [
-    { r: 3.2, speed: 0.5, size: 0.8, offset: 0 },
-    { r: 3.7, speed: -0.36, size: 0.6, offset: 2 },
-    { r: 2.9, speed: 0.62, size: 0.5, offset: 4 },
-    { r: 4.1, speed: -0.28, size: 0.7, offset: 1.2 },
-    { r: 3.4, speed: 0.44, size: 0.45, offset: 5.1 },
+    //        rx   rz   speed  size  phase          tiltX    yBase  bobAmp bobFreq spinSpd
+    { rx: 3.5, rz: 2.6, speed: 0.22,  size: 0.4,  phase: 0,            tiltX: 0.35,  yBase: 0,    bobAmp: 0.35, bobFreq: 0.7,  spinSpeed: 0.35  },
+    { rx: 4.0, rz: 2.8, speed:-0.16,  size: 0.3,  phase: Math.PI*0.5,  tiltX:-0.45,  yBase: 0.4,  bobAmp: 0.25, bobFreq: 0.9,  spinSpeed:-0.25  },
+    { rx: 3.0, rz: 3.6, speed: 0.28,  size: 0.25, phase: Math.PI,      tiltX: 0.55,  yBase:-0.3,  bobAmp: 0.4,  bobFreq: 0.55, spinSpeed: 0.30  },
+    { rx: 4.4, rz: 2.2, speed:-0.13,  size: 0.35, phase: Math.PI*1.5,  tiltX:-0.25,  yBase: 0.7,  bobAmp: 0.3,  bobFreq: 0.8,  spinSpeed:-0.2   },
+    { rx: 3.3, rz: 3.3, speed: 0.20,  size: 0.25, phase: Math.PI*0.8,  tiltX: 0.4,   yBase:-0.5,  bobAmp: 0.35, bobFreq: 0.65, spinSpeed: 0.28  },
   ], []);
   const orbsGroup = useRef<THREE.Group>(null);
 
@@ -129,34 +395,40 @@ function SceneContent({ bgRef }: { bgRef: React.RefObject<HTMLDivElement> }) {
   const spinPhase = useRef<"normal" | "accelerating" | "decelerating">("normal");
   const spinVelocity = useRef(0.8);
   const currentRotation = useRef(0);
-  const rotationSinceSwap = useRef(0);
+  const holdTimer = useRef(0);             // counts seconds in "normal" phase
 
   useFrame((state, delta) => {
     const p = scrollBus.progress;
     
-    // 1. Determine Target Theme (Backgrounds only now)
-    let desiredIndex = targetThemeIndex.current;
+    // ── 1. Determine when to trigger the next color swap ──
     if (p < 0.02) {
-      if (spinPhase.current === "normal" && rotationSinceSwap.current >= Math.PI * 2) {
-        desiredIndex = (activeThemeIndex.current + 1) % 5;
-        rotationSinceSwap.current = 0;
+      // Auto-cycle while at the top of the page
+      if (spinPhase.current === "normal") {
+        holdTimer.current += delta;
+        if (holdTimer.current >= COLOR_HOLD_SECONDS) {
+          // Time's up — pick the next color and start spinning
+          targetThemeIndex.current = (activeThemeIndex.current + 1) % JAR_COUNT;
+          spinPhase.current = "accelerating";
+          holdTimer.current = 0;
+        }
       }
     } else {
-      const sectionCount = 5;
-      desiredIndex = Math.min(sectionCount - 1, Math.floor(p * sectionCount)) % 5;
-      rotationSinceSwap.current = 0;
+      // While scrolling, map scroll position → jar color
+      const desiredIndex = Math.min(JAR_COUNT - 1, Math.floor(p * JAR_COUNT));
+      if (desiredIndex !== activeThemeIndex.current && spinPhase.current === "normal") {
+        targetThemeIndex.current = desiredIndex;
+        spinPhase.current = "accelerating";
+        holdTimer.current = 0;
+      }
     }
 
-    if (desiredIndex !== targetThemeIndex.current) {
-      targetThemeIndex.current = desiredIndex;
-      if (spinPhase.current === "normal") spinPhase.current = "accelerating";
-    }
-
-    // 2. High-Speed Spin Physics
+    // ── 2. High-speed spin physics ──
     if (spinPhase.current === "accelerating") {
-      spinVelocity.current += delta * 150; 
-      if (spinVelocity.current > 70) { 
+      spinVelocity.current += delta * 150;
+      if (spinVelocity.current > 70) {
+        // Peak speed reached → swap the color NOW (invisible because spinning so fast)
         activeThemeIndex.current = targetThemeIndex.current;
+        jarColorBus.activeIndex = activeThemeIndex.current;
         spinPhase.current = "decelerating";
       }
     } else if (spinPhase.current === "decelerating") {
@@ -164,17 +436,15 @@ function SceneContent({ bgRef }: { bgRef: React.RefObject<HTMLDivElement> }) {
       if (spinVelocity.current <= 0.8) {
         spinVelocity.current = 0.8;
         spinPhase.current = "normal";
+        holdTimer.current = 0;            // reset hold timer for the next cycle
       }
     }
 
     currentRotation.current += spinVelocity.current * delta;
-    if (spinPhase.current === "normal") {
-      rotationSinceSwap.current += spinVelocity.current * delta;
-    }
 
+    // ── 3. Background & fog — lerp to match the active jar color ──
     const theme = THEMES[activeThemeIndex.current];
 
-    // 3. Update Colors smoothly
     if (fogRef.current) fogRef.current.color.lerp(theme.fog, 0.05);
     
     if (bgRef.current) {
@@ -182,7 +452,7 @@ function SceneContent({ bgRef }: { bgRef: React.RefObject<HTMLDivElement> }) {
       bgRef.current.style.transition = "background 1s ease";
     }
 
-    // 4. Update Transforms
+    // ── 4. Transform the jar group ──
     if (group.current) {
       const targetX = Math.sin(p * Math.PI * 4) * 3.5; 
       group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, targetX, 0.05);
@@ -201,34 +471,56 @@ function SceneContent({ bgRef }: { bgRef: React.RefObject<HTMLDivElement> }) {
       group.current.scale.setScalar(THREE.MathUtils.lerp(group.current.scale.x, targetScale, 0.05));
     }
     
-    // Orbit Orbs animation
+    // ── 5. Premium orbit animation ──
     if (orbsGroup.current) {
       const t = state.clock.elapsedTime;
       orbsGroup.current.children.forEach((child, i) => {
         const o = orbs[i];
         if (!o) return;
-        child.position.x = Math.cos(t * o.speed + o.offset) * o.r;
-        child.position.z = Math.sin(t * o.speed + o.offset) * o.r;
-        child.position.y = Math.sin(t * 0.7 + o.offset) * 0.5;
-        child.rotation.y = t * 0.5 + o.offset;
-        child.rotation.x = Math.sin(t + o.offset) * 0.2 + 0.2;
-        child.rotation.z = Math.cos(t + o.offset) * 0.1;
+
+        // Elliptical path on a flat plane
+        const angle = t * o.speed + o.phase;
+        const flatX = Math.cos(angle) * o.rx;
+        const flatZ = Math.sin(angle) * o.rz;
+
+        // Tilt the orbital plane around the X axis
+        const cosT = Math.cos(o.tiltX);
+        const sinT = Math.sin(o.tiltX);
+        const tiltedY = flatZ * sinT + o.yBase;
+        const tiltedZ = flatZ * cosT;
+
+        // Gentle independent floating bob
+        const bob = Math.sin(t * o.bobFreq + o.phase * 2) * o.bobAmp;
+
+        // Smooth lerp for silky motion
+        child.position.x = THREE.MathUtils.lerp(child.position.x, flatX, 0.04);
+        child.position.y = THREE.MathUtils.lerp(child.position.y, tiltedY + bob, 0.04);
+        child.position.z = THREE.MathUtils.lerp(child.position.z, tiltedZ, 0.04);
+
+        // Slow elegant self-rotation — showcases all product sides
+        child.rotation.y = t * o.spinSpeed + o.phase;
+        child.rotation.x = Math.sin(t * 0.25 + o.phase) * 0.1 + 0.12;
+        child.rotation.z = Math.cos(t * 0.2 + o.phase) * 0.05;
       });
     }
   });
 
   return (
     <>
-      <fog ref={fogRef} attach="fog" args={["#1a1000", 9, 20]} />
+      <fog ref={fogRef} attach="fog" args={["#1a0008", 9, 20]} />
       
       <group ref={group} position={[0, -0.5, 0]}>
-        <StarSevenWaxJar />
+        <MainJarSwitcher />
       </group>
       
       <group ref={orbsGroup}>
-        {orbs.map((o, i) => (
-          <SpiderWaxJar key={i} scale={o.size} />
-        ))}
+        {/* orb[0] = SpiderWaxJar (colorIndex 4) */}
+        <SmallSpiderWaxJar colorIndex={4} scale={orbs[0].size} />
+        {/* orb[1-4] = Star Seven color variants (hide when matching big jar) */}
+        <SmallStarSevenJar colorIndex={0} scale={orbs[1].size} />
+        <SmallStarSevenJar colorIndex={1} scale={orbs[2].size} />
+        <SmallStarSevenJar colorIndex={2} scale={orbs[3].size} />
+        <SmallStarSevenJar colorIndex={3} scale={orbs[4].size} />
       </group>
     </>
   );

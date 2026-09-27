@@ -130,6 +130,11 @@ const ar = {
     submit: "إرسال الاستفسار",
     success: "تم إرسال استفسارك بنجاح، سنتواصل معك قريباً",
     select_brand: "اختر البراند (اختياري)",
+    btype_importer: "مستورد",
+    btype_distributor: "موزع",
+    btype_wholesaler: "تاجر جملة",
+    btype_retailer: "تاجر تجزئة",
+    btype_other: "أخرى",
   },
   careers: {
     label: "الوظائف",
@@ -329,6 +334,11 @@ const en: typeof ar = {
     submit: "Submit Inquiry",
     success: "Your inquiry has been sent. We'll contact you soon",
     select_brand: "Select a brand (optional)",
+    btype_importer: "Importer",
+    btype_distributor: "Distributor",
+    btype_wholesaler: "Wholesaler",
+    btype_retailer: "Retailer",
+    btype_other: "Other",
   },
   careers: {
     label: "Careers",

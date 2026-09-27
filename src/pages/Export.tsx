@@ -155,11 +155,11 @@ export default function Export() {
                 <div>
                   <label className="field-label" htmlFor="x-btype">{t("export.business_type")}</label>
                   <select id="x-btype" name="business_type" className="field">
-                    <option value="importer">Importer</option>
-                    <option value="distributor">Distributor</option>
-                    <option value="wholesaler">Wholesaler</option>
-                    <option value="retailer">Retailer</option>
-                    <option value="other">Other</option>
+                    <option value="importer">{t("export.btype_importer")}</option>
+                    <option value="distributor">{t("export.btype_distributor")}</option>
+                    <option value="wholesaler">{t("export.btype_wholesaler")}</option>
+                    <option value="retailer">{t("export.btype_retailer")}</option>
+                    <option value="other">{t("export.btype_other")}</option>
                   </select>
                 </div>
                 <div>

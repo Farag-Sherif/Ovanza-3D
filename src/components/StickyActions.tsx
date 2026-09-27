@@ -26,7 +26,7 @@ export default function StickyActions() {
       initial={{ opacity: 0, x: 30 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 1.2, duration: 0.8 }}
-      className="fixed bottom-8 z-40 flex flex-col gap-3 ltr:right-6 rtl:left-6"
+      className="fixed bottom-8 z-40 flex flex-col gap-1.5 ltr:right-6 rtl:left-6"
       aria-label="Quick actions"
     >
       {actions.map((a, i) =>
