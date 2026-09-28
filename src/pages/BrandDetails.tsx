@@ -111,7 +111,6 @@ export default function BrandDetails() {
                     </div>
                     <div className="p-4">
                       <h3 className="t-small line-clamp-2 font-bold text-cream-50">{p.name}</h3>
-                      {p.weight && <span className="t-small mt-1 block text-cream-300/50">{p.weight}</span>}
                     </div>
                   </Link>
                 </Reveal>

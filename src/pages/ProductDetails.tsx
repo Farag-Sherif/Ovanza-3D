@@ -69,26 +69,7 @@ export default function ProductDetails() {
               </Reveal>
             )}
 
-            <div className="mt-10 flex flex-wrap gap-4">
-              {(product.weight || product.country_origin) && (
-                <>
-                  {product.weight && (
-                    <Reveal delay={0.25}>
-                      <span className="t-small glass inline-flex items-center gap-2 rounded-full border border-white/10 px-5 py-3 text-cream-100/90">
-                        <Ruler className="h-4 w-4 text-gold-400" /> {t("products.weight")}: {product.weight}
-                      </span>
-                    </Reveal>
-                  )}
-                  {product.country_origin && (
-                    <Reveal delay={0.3}>
-                      <span className="t-small glass inline-flex items-center gap-2 rounded-full border border-white/10 px-5 py-3 text-cream-100/90">
-                        <MapPin className="h-4 w-4 text-gold-400" /> {t("products.origin")}: {product.country_origin}
-                      </span>
-                    </Reveal>
-                  )}
-                </>
-              )}
-            </div>
+
 
             <Reveal delay={0.35}>
               <div className="mt-10 flex flex-wrap gap-4">

@@ -105,7 +105,6 @@ export default function Products() {
                     </div>
                     <div className="p-5">
                       <h3 className="t-body line-clamp-2 min-h-[2.6em] font-bold text-cream-50">{p.name}</h3>
-                      {p.weight && <span className="t-small mt-2 block text-gold-400">{p.weight}</span>}
                     </div>
                   </Link>
                 </Reveal>
