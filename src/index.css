@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 @import "@fontsource/ibm-plex-sans-arabic/300.css";
 @import "@fontsource/ibm-plex-sans-arabic/400.css";
 @import "@fontsource/ibm-plex-sans-arabic/500.css";
@@ -10,10 +10,6 @@
 @import "@fontsource/manrope/600.css";
 @import "@fontsource/manrope/700.css";
 @import "@fontsource/manrope/800.css";
-@import "@fontsource/cormorant-garamond/400.css";
-@import "@fontsource/cormorant-garamond/500.css";
-@import "@fontsource/cormorant-garamond/600.css";
-@import "@fontsource/cormorant-garamond/400-italic.css";
 
 /* ============================================================
    OVANZA DESIGN TOKENS
@@ -35,11 +31,11 @@
 
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-arabic: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Cormorant Garamond", serif;
+  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
 
 /* ============================================================
-   DUAL TYPE SCALE — Arabic gets a calmer, smaller scale
+   DUAL TYPE SCALE â€” Arabic gets a calmer, smaller scale
    ============================================================ */
 :root {
   --fs-ar: 1;
@@ -68,10 +64,11 @@ body {
 
 html[lang="ar"] body {
   font-family: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
   letter-spacing: 0 !important;
 }
 
-/* Fluid display sizes — every size multiplies by --fs-ar */
+/* Fluid display sizes â€” every size multiplies by --fs-ar */
 .t-hero   { font-size: calc(clamp(2.6rem, 8.5vw, 6.8rem) * var(--fs-ar)); line-height: var(--lh-display); }
 .t-h1     { font-size: calc(clamp(2.2rem, 5.5vw, 4.4rem) * var(--fs-ar)); line-height: var(--lh-display); }
 .t-h2     { font-size: calc(clamp(1.8rem, 4vw, 3.2rem) * var(--fs-ar)); line-height: var(--lh-display); }
@@ -88,11 +85,11 @@ html[lang="ar"] body {
 }
 html[lang="ar"] .t-label { letter-spacing: 0.06em; text-transform: none; font-weight: 500; }
 
-.font-display { font-family: "Cormorant Garamond", serif; }
-html[lang="ar"] .font-display { font-family: "IBM Plex Sans Arabic", ui-sans-serif, sans-serif; font-weight: 600; }
+.font-display { font-weight: 500; }
+html[lang="ar"] .font-display { font-weight: 600; }
 
 /* ============================================================
-   LAYOUT UTILITIES (raw CSS — no @apply for build safety)
+   LAYOUT UTILITIES (raw CSS â€” no @apply for build safety)
    ============================================================ */
 .container-ov { margin-inline: auto; width: 100%; max-width: 1440px; padding-inline: 1.25rem; }
 @media (min-width: 640px)  { .container-ov { padding-inline: 2rem; } }
@@ -225,3 +222,5 @@ html[dir="rtl"] .marquee-track { animation-name: ov-marquee-rtl; }
     scroll-behavior: auto !important;
   }
 }
+
+

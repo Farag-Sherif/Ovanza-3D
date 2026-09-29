@@ -1,15 +1,15 @@
-import axiosInstance, { cdnUrl } from "./client";
+﻿import axiosInstance, { cdnUrl } from "./client";
 
 /* ------------------------------------------------------------------
-   API → ENTITY MAP (existing backend contract — read-only)
-   /settings  → company profile, counters, about, hero video, contact
-   /cafes     → BRANDS (each cafe = one brand) with translations
-   /sub-cafes → PRODUCT CATEGORIES (belong to a brand via cafe_id)
-   /items     → PRODUCTS (cafe_id = brand, sub_cafe_id = category)
-   /socails   → SOCIAL LINKS
-   /partners  → PARTNER LOGOS
-   /blogs     → NEWS / EVENTS POSTS
-   POST /contact → contact form (multipart: name,email,subject,message)
+   API â†’ ENTITY MAP (existing backend contract â€” read-only)
+   /settings  â†’ company profile, counters, about, hero video, contact
+   /cafes     â†’ BRANDS (each cafe = one brand) with translations
+   /sub-cafes â†’ PRODUCT CATEGORIES (belong to a brand via cafe_id)
+   /items     â†’ PRODUCTS (cafe_id = brand, sub_cafe_id = category)
+   /socails   â†’ SOCIAL LINKS
+   /partners  â†’ PARTNER LOGOS
+   /blogs     â†’ NEWS / EVENTS POSTS
+   POST /contact â†’ contact form (multipart: name,email,subject,message)
 ------------------------------------------------------------------- */
 
 export interface Translation {
@@ -96,6 +96,18 @@ export interface RawSocial {
 export interface RawPartner {
   id: number;
   image_path: string | null;
+}
+
+export interface RawEvent {
+  id: number;
+  title: string;
+  description: string;
+  place: string | null;
+  image: string | null;
+  image_path?: string | null;
+  created_at: string;
+  date: string;
+  translations?: Translation[];
 }
 
 export interface RawBlog {
@@ -188,6 +200,29 @@ export async function fetchPartners(): Promise<RawPartner[]> {
   return Array.isArray(data) ? data : [];
 }
 
+export async function fetchEvents(locale: string): Promise<RawEvent[]> {
+  const { data } = await axiosInstance.get("/events");
+  const list = Array.isArray(data) ? data : (data?.data ?? []);
+  return list.map((e: any) => ({
+    ...e,
+    title: tr(e.translations, "title", locale) || e.title,
+    description: tr(e.translations, "description", locale) || e.description,
+    image_path: cdnUrl(e.image) || e.image_path,
+  }));
+}
+
+export async function fetchEventById(id: string | number, locale: string): Promise<RawEvent | null> {
+  const { data } = await axiosInstance.get(`/event/${id}`);
+  const e = data?.data ?? data;
+  if (!e) return null;
+  return {
+    ...e,
+    title: tr(e.translations, "title", locale) || e.title,
+    description: tr(e.translations, "description", locale) || e.description,
+    image_path: cdnUrl(e.image) || e.image_path,
+  };
+}
+
 export async function fetchBlogs(locale: string): Promise<RawBlog[]> {
   const { data } = await axiosInstance.get("/blogs");
   const list = Array.isArray(data) ? data : (data?.data ?? []);
@@ -198,7 +233,7 @@ export async function fetchBlogs(locale: string): Promise<RawBlog[]> {
   }));
 }
 
-/* Existing contact endpoint — payload contract preserved exactly */
+/* Existing contact endpoint â€” payload contract preserved exactly */
 export async function submitContact(formData: {
   name: string;
   email: string;
@@ -215,3 +250,5 @@ export async function submitContact(formData: {
   });
   return data;
 }
+
+

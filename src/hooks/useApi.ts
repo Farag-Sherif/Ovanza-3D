@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+﻿import { useQuery } from "@tanstack/react-query";
 import {
   fetchSettings, fetchBrands, fetchCategories, fetchProducts,
-  fetchSocials, fetchPartners, fetchBlogs,
+  fetchSocials, fetchPartners, fetchBlogs, fetchEvents, fetchEventById,
 } from "../api/services";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -17,6 +17,18 @@ export const useSettings = () => useLocalized(fetchSettings);
 export const useBrands = () => useLocalized(fetchBrands);
 export const useCategories = () => useLocalized(fetchCategories);
 export const useProducts = () => useLocalized(fetchProducts);
+export const useEvents = () => useLocalized(fetchEvents);
+
+export function useEvent(id: string | number | undefined) {
+  const { language } = useLanguage();
+  return useQuery({
+    queryKey: ["event", id, language],
+    queryFn: () => fetchEventById(id!, language),
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
 export const useBlogs = () => useLocalized(fetchBlogs);
 
 export function useSocials() {
@@ -25,3 +37,4 @@ export function useSocials() {
 export function usePartners() {
   return useQuery({ queryKey: ["partners"], queryFn: () => fetchPartners(), staleTime: Infinity });
 }
+

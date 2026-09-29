@@ -1,10 +1,10 @@
-import { Suspense, useMemo, useRef } from "react";
+﻿import { Suspense, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { scrollBus } from "../../lib/scrollBus";
 
-/* ── 5 themes matching the 5 jar variants (4 Star Seven + 1 Spider Wax) ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ 5 themes matching the 5 jar variants (4 Star Seven + 1 Spider Wax) Ã¢â€â‚¬Ã¢â€â‚¬ */
 const JAR_COUNT = 5;
 const THEMES = [
   {
@@ -34,7 +34,7 @@ const THEMES = [
   },
 ];
 
-/* ── Bottom-base colors matching each jar variant ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Bottom-base colors matching each jar variant Ã¢â€â‚¬Ã¢â€â‚¬ */
 const BOTTOM_COLORS = [
   new THREE.Color("#eb1933"), // Red
   new THREE.Color("#1a1a1a"), // Black
@@ -42,13 +42,13 @@ const BOTTOM_COLORS = [
   new THREE.Color("#f9a825"), // Yellow
 ];
 
-/* ── Module-level bus: SceneContent writes, StarSevenWaxJar reads ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Module-level bus: SceneContent writes, StarSevenWaxJar reads Ã¢â€â‚¬Ã¢â€â‚¬ */
 const jarColorBus = { activeIndex: 0 };
 
-/* ── How long to hold each color before triggering a spin swap ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ How long to hold each color before triggering a spin swap Ã¢â€â‚¬Ã¢â€â‚¬ */
 const COLOR_HOLD_SECONDS = 4;
 
-/* ── Texture paths for each jar color variant [top, body, lid-side] ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Texture paths for each jar color variant [top, body, lid-side] Ã¢â€â‚¬Ã¢â€â‚¬ */
 const JAR_TEXTURE_PATHS = [
   /* 0 = Red */
   ["/assets/star-seven/top.png", "/assets/star-seven/body.png", "/assets/star-seven/lid-side.jpg"],
@@ -98,7 +98,7 @@ function SpiderWaxJar(props: any) {
   );
 }
 
-/* ── Small orbiting Spider Wax jar ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Small orbiting Spider Wax jar Ã¢â€â‚¬Ã¢â€â‚¬ */
 /* Hides itself when its colorIndex matches the big jar's active color */
 function SmallSpiderWaxJar({ colorIndex, ...props }: { colorIndex: number } & Record<string, any>) {
   const groupRef = useRef<THREE.Group>(null);
@@ -120,7 +120,7 @@ function SmallSpiderWaxJar({ colorIndex, ...props }: { colorIndex: number } & Re
   );
 }
 
-/* ── Small orbiting Star Seven jar with a fixed color variant ── */
+/* Ã¢â€â‚¬Ã¢â€â‚¬ Small orbiting Star Seven jar with a fixed color variant Ã¢â€â‚¬Ã¢â€â‚¬ */
 /* Hides itself when its colorIndex matches the big jar's active color */
 function SmallStarSevenJar({ colorIndex, ...props }: { colorIndex: number } & Record<string, any>) {
   const [topTex, bodyTex, lidSideTex] = useTexture(
@@ -266,7 +266,7 @@ function JarVariantLayer({
 }
 
 /* ================================================================ */
-/* StarSevenWaxJar — reads jarColorBus.activeIndex to swap layers    */
+/* StarSevenWaxJar Ã¢â‚¬â€ reads jarColorBus.activeIndex to swap layers    */
 /* ================================================================ */
 function StarSevenWaxJar(props: any) {
   /* Load ALL 4 color-variant texture sets */
@@ -294,7 +294,7 @@ function StarSevenWaxJar(props: any) {
     "/assets/star-seven/Hair WAX premium metal-11.png",
   ]);
 
-  /* Shared mutable store keyed by variant index → material array */
+  /* Shared mutable store keyed by variant index Ã¢â€ â€™ material array */
   const materialStore = useRef<Record<number, THREE.MeshStandardMaterial[]>>({});
 
   /* Drive opacity based on jarColorBus (set by SceneContent) */
@@ -310,7 +310,7 @@ function StarSevenWaxJar(props: any) {
 
       const target = i === active ? 1 : 0;
       for (const mat of mats) {
-        // Fast lerp — the spin is fast so the swap looks instant
+        // Fast lerp Ã¢â‚¬â€ the spin is fast so the swap looks instant
         mat.opacity = THREE.MathUtils.lerp(mat.opacity, target, 0.25);
         mat.depthWrite = mat.opacity > 0.5;
       }
@@ -338,7 +338,7 @@ function StarSevenWaxJar(props: any) {
 }
 
 /* ================================================================ */
-/* MainJarSwitcher — swaps between Star Seven and Spider Wax         */
+/* MainJarSwitcher Ã¢â‚¬â€ swaps between Star Seven and Spider Wax         */
 /* ================================================================ */
 function MainJarSwitcher(props: any) {
   const starSevenRef = useRef<THREE.Group>(null);
@@ -372,20 +372,20 @@ function MainJarSwitcher(props: any) {
 }
 
 /* ================================================================ */
-/* SceneContent — orchestrates spin, jar-color swap, & background    */
+/* SceneContent Ã¢â‚¬â€ orchestrates spin, jar-color swap, & background    */
 /* ================================================================ */
 function SceneContent({ bgRef }: { bgRef: React.RefObject<HTMLDivElement> }) {
   const group = useRef<THREE.Group>(null);
   const fogRef = useRef<THREE.Fog>(null);
   
-  /* ── Orbit configs: tilted elliptical paths for cinematic depth ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ Orbit configs: tilted elliptical paths for cinematic depth Ã¢â€â‚¬Ã¢â€â‚¬ */
   const orbs = useMemo(() => [
     //        rx   rz   speed  size  phase          tiltX    yBase  bobAmp bobFreq spinSpd
-    { rx: 3.5, rz: 2.6, speed: 0.22,  size: 0.4,  phase: 0,            tiltX: 0.35,  yBase: 0,    bobAmp: 0.35, bobFreq: 0.7,  spinSpeed: 0.35  },
-    { rx: 4.0, rz: 2.8, speed:-0.16,  size: 0.3,  phase: Math.PI*0.5,  tiltX:-0.45,  yBase: 0.4,  bobAmp: 0.25, bobFreq: 0.9,  spinSpeed:-0.25  },
-    { rx: 3.0, rz: 3.6, speed: 0.28,  size: 0.25, phase: Math.PI,      tiltX: 0.55,  yBase:-0.3,  bobAmp: 0.4,  bobFreq: 0.55, spinSpeed: 0.30  },
-    { rx: 4.4, rz: 2.2, speed:-0.13,  size: 0.35, phase: Math.PI*1.5,  tiltX:-0.25,  yBase: 0.7,  bobAmp: 0.3,  bobFreq: 0.8,  spinSpeed:-0.2   },
-    { rx: 3.3, rz: 3.3, speed: 0.20,  size: 0.25, phase: Math.PI*0.8,  tiltX: 0.4,   yBase:-0.5,  bobAmp: 0.35, bobFreq: 0.65, spinSpeed: 0.28  },
+    { rx: 2.7, rz: 2.3, speed: 0.22,  size: 0.65, phase: 0,            tiltX: 0.35,  yBase: 0,    bobAmp: 0.35, bobFreq: 0.7,  spinSpeed: 0.35  },
+    { rx: 3.1, rz: 2.4, speed:-0.16,  size: 0.5,  phase: Math.PI*0.5,  tiltX:-0.45,  yBase: 0.4,  bobAmp: 0.25, bobFreq: 0.9,  spinSpeed:-0.25  },
+    { rx: 2.6, rz: 2.7, speed: 0.28,  size: 0.45, phase: Math.PI,      tiltX: 0.55,  yBase:-0.3,  bobAmp: 0.4,  bobFreq: 0.55, spinSpeed: 0.30  },
+    { rx: 3.2, rz: 2.1, speed:-0.13,  size: 0.55, phase: Math.PI*1.5,  tiltX:-0.25,  yBase: 0.7,  bobAmp: 0.3,  bobFreq: 0.8,  spinSpeed:-0.2   },
+    { rx: 2.6, rz: 2.6, speed: 0.20,  size: 0.45, phase: Math.PI*0.8,  tiltX: 0.4,   yBase:-0.5,  bobAmp: 0.35, bobFreq: 0.65, spinSpeed: 0.28  },
   ], []);
   const orbsGroup = useRef<THREE.Group>(null);
 
@@ -400,20 +400,20 @@ function SceneContent({ bgRef }: { bgRef: React.RefObject<HTMLDivElement> }) {
   useFrame((state, delta) => {
     const p = scrollBus.progress;
     
-    // ── 1. Determine when to trigger the next color swap ──
+    // Ã¢â€â‚¬Ã¢â€â‚¬ 1. Determine when to trigger the next color swap Ã¢â€â‚¬Ã¢â€â‚¬
     if (p < 0.02) {
       // Auto-cycle while at the top of the page
       if (spinPhase.current === "normal") {
         holdTimer.current += delta;
         if (holdTimer.current >= COLOR_HOLD_SECONDS) {
-          // Time's up — pick the next color and start spinning
+          // Time's up Ã¢â‚¬â€ pick the next color and start spinning
           targetThemeIndex.current = (activeThemeIndex.current + 1) % JAR_COUNT;
           spinPhase.current = "accelerating";
           holdTimer.current = 0;
         }
       }
     } else {
-      // While scrolling, map scroll position → jar color
+      // While scrolling, map scroll position Ã¢â€ â€™ jar color
       const desiredIndex = Math.min(JAR_COUNT - 1, Math.floor(p * JAR_COUNT));
       if (desiredIndex !== activeThemeIndex.current && spinPhase.current === "normal") {
         targetThemeIndex.current = desiredIndex;
@@ -422,11 +422,11 @@ function SceneContent({ bgRef }: { bgRef: React.RefObject<HTMLDivElement> }) {
       }
     }
 
-    // ── 2. High-speed spin physics ──
+    // Ã¢â€â‚¬Ã¢â€â‚¬ 2. High-speed spin physics Ã¢â€â‚¬Ã¢â€â‚¬
     if (spinPhase.current === "accelerating") {
       spinVelocity.current += delta * 150;
       if (spinVelocity.current > 70) {
-        // Peak speed reached → swap the color NOW (invisible because spinning so fast)
+        // Peak speed reached Ã¢â€ â€™ swap the color NOW (invisible because spinning so fast)
         activeThemeIndex.current = targetThemeIndex.current;
         jarColorBus.activeIndex = activeThemeIndex.current;
         spinPhase.current = "decelerating";
@@ -442,7 +442,7 @@ function SceneContent({ bgRef }: { bgRef: React.RefObject<HTMLDivElement> }) {
 
     currentRotation.current += spinVelocity.current * delta;
 
-    // ── 3. Background & fog — lerp to match the active jar color ──
+    // Ã¢â€â‚¬Ã¢â€â‚¬ 3. Background & fog Ã¢â‚¬â€ lerp to match the active jar color Ã¢â€â‚¬Ã¢â€â‚¬
     const theme = THEMES[activeThemeIndex.current];
 
     if (fogRef.current) fogRef.current.color.lerp(theme.fog, 0.05);
@@ -452,7 +452,7 @@ function SceneContent({ bgRef }: { bgRef: React.RefObject<HTMLDivElement> }) {
       bgRef.current.style.transition = "background 1s ease";
     }
 
-    // ── 4. Transform the jar group ──
+    // Ã¢â€â‚¬Ã¢â€â‚¬ 4. Transform the jar group Ã¢â€â‚¬Ã¢â€â‚¬
     if (group.current) {
       const targetX = Math.sin(p * Math.PI * 4) * 3.5; 
       group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, targetX, 0.05);
@@ -471,38 +471,49 @@ function SceneContent({ bgRef }: { bgRef: React.RefObject<HTMLDivElement> }) {
       group.current.scale.setScalar(THREE.MathUtils.lerp(group.current.scale.x, targetScale, 0.05));
     }
     
-    // ── 5. Premium orbit animation ──
+    // Ã¢â€â‚¬Ã¢â€â‚¬ 5. Premium orbit animation Ã¢â€â‚¬Ã¢â€â‚¬
     if (orbsGroup.current) {
-      const t = state.clock.elapsedTime;
-      orbsGroup.current.children.forEach((child, i) => {
-        const o = orbs[i];
-        if (!o) return;
+        const t = state.clock.elapsedTime;
+        
+        // Calculate target positions
+        const targets = orbs.map((o) => {
+          const angle = t * o.speed + o.phase;
+          const flatX = Math.cos(angle) * o.rx;
+          const flatZ = Math.sin(angle) * o.rz;
+          const cosT = Math.cos(o.tiltX);
+          const sinT = Math.sin(o.tiltX);
+          const tiltedY = flatZ * sinT + o.yBase;
+          const tiltedZ = flatZ * cosT;
+          const bob = Math.sin(t * o.bobFreq + o.phase * 2) * o.bobAmp;
+          return new THREE.Vector3(flatX, tiltedY + bob, tiltedZ);
+        });
 
-        // Elliptical path on a flat plane
-        const angle = t * o.speed + o.phase;
-        const flatX = Math.cos(angle) * o.rx;
-        const flatZ = Math.sin(angle) * o.rz;
+        // Push overlapping targets apart (repulsion)
+        const MIN_DISTANCE = 1.35; 
+        for (let i = 0; i < targets.length; i++) {
+          for (let j = i + 1; j < targets.length; j++) {
+            const p1 = targets[i];
+            const p2 = targets[j];
+            const dist = p1.distanceTo(p2);
+            if (dist < MIN_DISTANCE) {
+              const push = (MIN_DISTANCE - dist) * 0.5;
+              const dir = new THREE.Vector3().subVectors(p1, p2).normalize();
+              if (dir.lengthSq() === 0) dir.set(1, 0, 0);
+              p1.addScaledVector(dir, push);
+              p2.addScaledVector(dir, -push);
+            }
+          }
+        }
 
-        // Tilt the orbital plane around the X axis
-        const cosT = Math.cos(o.tiltX);
-        const sinT = Math.sin(o.tiltX);
-        const tiltedY = flatZ * sinT + o.yBase;
-        const tiltedZ = flatZ * cosT;
-
-        // Gentle independent floating bob
-        const bob = Math.sin(t * o.bobFreq + o.phase * 2) * o.bobAmp;
-
-        // Smooth lerp for silky motion
-        child.position.x = THREE.MathUtils.lerp(child.position.x, flatX, 0.04);
-        child.position.y = THREE.MathUtils.lerp(child.position.y, tiltedY + bob, 0.04);
-        child.position.z = THREE.MathUtils.lerp(child.position.z, tiltedZ, 0.04);
-
-        // Slow elegant self-rotation — showcases all product sides
-        child.rotation.y = t * o.spinSpeed + o.phase;
-        child.rotation.x = Math.sin(t * 0.25 + o.phase) * 0.1 + 0.12;
-        child.rotation.z = Math.cos(t * 0.2 + o.phase) * 0.05;
-      });
-    }
+        orbsGroup.current.children.forEach((child, i) => {
+          const o = orbs[i];
+          if (!o || !targets[i]) return;
+          child.position.lerp(targets[i], 0.04);
+          child.rotation.y = t * o.spinSpeed + o.phase;
+          child.rotation.x = Math.sin(t * 0.25 + o.phase) * 0.1 + 0.12;
+          child.rotation.z = Math.cos(t * 0.2 + o.phase) * 0.05;
+        });
+      }
   });
 
   return (
@@ -563,3 +574,8 @@ export default function HeroScene() {
     </>
   );
 }
+
+
+
+
+

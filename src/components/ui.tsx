@@ -208,7 +208,7 @@ export function PageHero({
       {image && (
         <>
           <Img src={image} alt={title} className="absolute inset-0 h-full w-full" eager />
-          <div className="absolute inset-0 bg-gradient-to-t from-espresso-950 via-espresso-950/70 to-espresso-950/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-espresso-950/60 via-transparent to-transparent" />
         </>
       )}
       <div className="container-ov relative">

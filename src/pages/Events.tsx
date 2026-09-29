@@ -1,8 +1,8 @@
-import { useMemo } from "react";
+﻿import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, ArrowUpRight, ArrowUpLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useBlogs } from "../hooks/useApi";
+import { useEvents, useEvent } from "../hooks/useApi";
 import { Reveal, PageHero, Img, Loader, ErrorState, EmptyState } from "../components/ui";
 import { stripHtml } from "../api/client";
 import { useLanguage } from "../context/LanguageContext";
@@ -10,25 +10,29 @@ import { useLanguage } from "../context/LanguageContext";
 export default function Events() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  const { data: blogs, isLoading, isError, refetch } = useBlogs();
-  const { language } = useLanguage();
+  const { language, dir } = useLanguage();
 
-  const single = useMemo(() => blogs?.find((b) => String(b.id) === id), [blogs, id]);
+  const { data: eventData, isLoading: isLoadingSingle, isError: isErrorSingle, refetch: refetchSingle } = useEvent(id);
+  const { data: eventsList, isLoading: isLoadingList, isError: isErrorList, refetch: refetchList } = useEvents();
+
   const byYear = useMemo(() => {
-    const map = new Map<string, typeof blogs>();
-    (blogs ?? []).forEach((b) => {
-      const y = new Date(b.created_at).getFullYear().toString();
+    const map = new Map<string, typeof eventsList>();
+    (eventsList ?? []).forEach((b) => {
+      const d = b.date ? new Date(b.date) : new Date(b.created_at);
+      const y = d.getFullYear().toString();
       if (!map.has(y)) map.set(y, []);
       map.get(y)!.push(b);
     });
     return Array.from(map.entries()).sort((a, b) => Number(b[0]) - Number(a[0]));
-  }, [blogs]);
+  }, [eventsList]);
 
-  if (isLoading) return <Loader full />;
-  if (isError) return <ErrorState onRetry={() => refetch()} />;
+  if (id) {
+    if (isLoadingSingle) return <Loader full />;
+    if (isErrorSingle || !eventData) return <ErrorState onRetry={() => refetchSingle()} />;
+    
+    const single = eventData;
+    const d = single.date ? new Date(single.date) : new Date(single.created_at);
 
-  /* ---- single event/news view ---- */
-  if (single) {
     return (
       <>
         <PageHero label={t("events.label")} title={single.title} image={single.image_path} />
@@ -37,15 +41,21 @@ export default function Events() {
             <Reveal>
               <span className="t-small inline-flex items-center gap-2 text-gold-400">
                 <CalendarDays className="h-4 w-4" />
-                {new Date(single.created_at).toLocaleDateString(language === "ar" ? "ar-EG" : "en-GB", {
+                {d.toLocaleDateString(language === "ar" ? "ar-EG" : "en-GB", {
                   year: "numeric", month: "long", day: "numeric",
                 })}
+                {single.place && (
+                  <>
+                    <span className="mx-2 opacity-50">|</span>
+                    <span>{single.place}</span>
+                  </>
+                )}
               </span>
             </Reveal>
             <Reveal delay={0.1}>
               <div
                 className="rich-text t-lead mt-8 text-cream-300/85"
-                dangerouslySetInnerHTML={{ __html: single.content || "" }}
+                dangerouslySetInnerHTML={{ __html: single.description || "" }}
               />
             </Reveal>
             {single.image_path && (
@@ -64,17 +74,18 @@ export default function Events() {
     );
   }
 
-  /* ---- timeline listing ---- */
+  if (isLoadingList) return <Loader full />;
+  if (isErrorList) return <ErrorState onRetry={() => refetchList()} />;
+
   return (
     <>
       <PageHero label={t("events.label")} title={t("events.title")} />
       <section className="relative pb-28 pt-4">
         <div className="container-ov">
-          {!blogs?.length ? (
+          {!eventsList?.length ? (
             <EmptyState message={t("events.empty")} />
           ) : (
             <div className="relative">
-              {/* timeline spine */}
               <span className="absolute top-0 h-full w-px bg-gradient-to-b from-gold-600/50 via-white/10 to-transparent ltr:left-0 rtl:right-0 md:ltr:left-1/2 md:rtl:right-1/2" />
               {byYear.map(([year, items]) => (
                 <div key={year} className="relative mb-16">
@@ -84,31 +95,34 @@ export default function Events() {
                     </span>
                   </Reveal>
                   <div className="flex flex-col gap-8">
-                    {items.map((b, i) => (
-                      <Reveal key={b.id} delay={Math.min(i * 0.08, 0.3)}>
-                        <Link
-                          to={`/events/${b.id}`}
-                          className={`card-surface group grid overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:border-gold-500/40 md:grid-cols-[280px_1fr] ${
-                            i % 2 === 1 ? "md:ltr:ml-[8%]" : ""
-                          }`}
-                        >
-                          <div className="relative h-52 overflow-hidden md:h-full">
-                            <Img src={b.image_path} alt={b.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                          </div>
-                          <div className="p-7">
-                            <span className="t-small inline-flex items-center gap-2 text-gold-400">
-                              <CalendarDays className="h-3.5 w-3.5" />
-                              {new Date(b.created_at).toLocaleDateString(language === "ar" ? "ar-EG" : "en-GB", { year: "numeric", month: "long", day: "numeric" })}
-                            </span>
-                            <h3 className="t-h3 font-display mt-3 text-cream-50">{b.title}</h3>
-                            <p className="t-small mt-3 line-clamp-2 text-cream-300/70">{stripHtml(b.content).slice(0, 160)}</p>
-                            <span className="t-small mt-5 inline-flex items-center gap-2 font-bold text-gold-400">
-                              {t("events.read")} <span aria-hidden>→</span>
-                            </span>
-                          </div>
-                        </Link>
-                      </Reveal>
-                    ))}
+                    {items.map((b, i) => {
+                      const eventDate = b.date ? new Date(b.date) : new Date(b.created_at);
+                      return (
+                        <Reveal key={b.id} delay={Math.min(i * 0.08, 0.3)}>
+                          <Link
+                            to={`/events/${b.id}`}
+                            className={`card-surface group grid overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:border-gold-500/40 md:grid-cols-[280px_1fr] ${
+                              i % 2 === 1 ? "md:ltr:ml-[8%]" : ""
+                            }`}
+                          >
+                            <div className="relative h-52 overflow-hidden md:h-full">
+                              <Img src={b.image_path} alt={b.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                            </div>
+                            <div className="p-7">
+                              <span className="t-small inline-flex items-center gap-2 text-gold-400">
+                                <CalendarDays className="h-3.5 w-3.5" />
+                                {eventDate.toLocaleDateString(language === "ar" ? "ar-EG" : "en-GB", { year: "numeric", month: "long", day: "numeric" })}
+                              </span>
+                              <h3 className="t-h3 font-display mt-3 text-cream-50">{b.title}</h3>
+                              <p className="t-small mt-3 line-clamp-2 text-cream-300/70">{stripHtml(b.description).slice(0, 160)}</p>
+                              <span className="t-small mt-5 inline-flex items-center gap-2 font-bold text-gold-400">
+                                {t("events.read")} {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
+                              </span>
+                            </div>
+                          </Link>
+                        </Reveal>
+                      );
+                    })}
                   </div>
                 </div>
               ))}
@@ -119,3 +133,4 @@ export default function Events() {
     </>
   );
 }
+

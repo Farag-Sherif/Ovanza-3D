@@ -58,24 +58,62 @@ export default function Export() {
     <>
       <PageHero label={t("export.label")} title={t("export.title")} sub={t("export.overview_title")} />
 
+      {/* Global Reach Section */}
+      <section className="relative pt-24 pb-12">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,169,92,0.15),transparent_50%)]" />
+        <div className="container-ov relative text-center">
+          <Reveal>
+            <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-3xl bg-gold-500/10 border border-gold-500/20 shadow-[0_0_40px_rgba(212,169,92,0.15)]">
+              <Globe2 className="h-10 w-10 text-gold-400" strokeWidth={1.5} />
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <span className="t-label text-gold-500">{t("home.global_label")}</span>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <h2 className="t-h2 font-display mx-auto mt-6 max-w-3xl text-cream-50">
+              {t("home.global_title")}
+            </h2>
+          </Reveal>
+          <Reveal delay={0.3}>
+            <p className="t-lead mx-auto mt-6 max-w-2xl text-cream-300/80">
+              {t("home.global_text")}
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
       {/* Export journey */}
       <section className="relative py-24">
         <div className="container-ov">
           <SectionHead label={t("export.label")} title={t("export.process_title")} />
-          <div className="no-scrollbar -mx-5 flex gap-4 overflow-x-auto px-5 pb-4 lg:mx-0 lg:grid lg:grid-cols-7 lg:px-0">
-            {t("export.process", { returnObjects: true }).map((step, i) => (
-              <Reveal key={i} delay={i * 0.07} className="min-w-[150px] flex-1">
-                <div className="group relative h-full rounded-2xl border border-white/8 bg-white/[0.03] p-5 text-center transition-all duration-500 hover:border-gold-500/40 hover:bg-white/[0.05]">
-                  <span className="font-display mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-gold-500/10 text-lg text-gold-400">
-                    {i + 1}
-                  </span>
-                  <span className="t-small font-bold text-cream-100">{step}</span>
-                  {i < 6 && (
-                    <span className="absolute top-1/2 h-px w-4 bg-gold-600/40 ltr:-right-2 rtl:-left-2" />
-                  )}
-                </div>
-              </Reveal>
-            ))}
+          <div className="relative mx-auto mt-16 max-w-4xl py-6">
+            <span className="absolute top-0 h-full w-px bg-gradient-to-b from-gold-600/50 via-white/10 to-transparent ltr:left-7 rtl:right-7 md:ltr:left-1/2 md:rtl:right-1/2" />
+            <div className="flex flex-col gap-10">
+              {(t("export.process", { returnObjects: true }) as string[]).map((step, i) => {
+                const isEven = i % 2 === 0;
+                const containerCls = `relative flex items-center md:w-1/2 ${
+                  isEven 
+                    ? 'md:ltr:ml-auto md:rtl:mr-auto md:ltr:pl-12 md:rtl:pr-12' 
+                    : 'md:ltr:mr-auto md:rtl:ml-auto md:ltr:pr-12 md:rtl:pl-12 md:justify-end'
+                }`;
+                const nodeCls = `absolute top-1/2 z-10 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border-4 border-espresso-950 bg-gold-500/10 font-display text-xl text-gold-400 ltr:left-0 rtl:right-0 ` + 
+                  (isEven 
+                    ? 'md:ltr:left-0 md:ltr:-ml-7 md:rtl:right-0 md:rtl:-mr-7' 
+                    : 'md:ltr:left-auto md:ltr:right-0 md:ltr:-mr-7 md:ltr:ml-0 md:rtl:right-auto md:rtl:left-0 md:rtl:-ml-7 md:rtl:mr-0');
+                
+                return (
+                  <Reveal key={i} delay={i * 0.07} className="w-full">
+                    <div className={containerCls}>
+                      <span className={nodeCls}>{i + 1}</span>
+                      <div className="card-surface group w-full rounded-3xl p-6 md:p-8 text-center transition-all duration-500 hover:-translate-y-1 hover:border-gold-500/40 ltr:ml-20 rtl:mr-20 md:ltr:ml-0 md:rtl:mr-0">
+                        <span className="t-h3 font-display text-cream-50">{step}</span>
+                      </div>
+                    </div>
+                  </Reveal>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
@@ -101,7 +139,7 @@ export default function Export() {
             <div className="flex flex-wrap gap-3">
               {categories?.map((c, i) => (
                 <Reveal key={c.id} delay={i * 0.05}>
-                  <span className="t-small rounded-full border border-gold-600/30 bg-gold-500/8 px-5 py-3 font-semibold text-gold-300">
+                  <span className="t-small inline-flex rounded-full border border-gold-600/30 bg-gold-500/8 px-5 py-3 font-semibold text-gold-300">
                     {c.name}
                   </span>
                 </Reveal>
