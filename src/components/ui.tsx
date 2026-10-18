@@ -36,15 +36,17 @@ export function SectionHead({
   title,
   sub,
   align = "center",
+  className = "",
 }: {
   label: string;
   title: string;
   sub?: string;
   align?: "center" | "start";
+  className?: string;
 }) {
   const alignCls = align === "center" ? "items-center text-center" : "items-start text-start";
   return (
-    <div className={`flex flex-col gap-5 ${alignCls} mb-14`}>
+    <div className={`flex flex-col gap-5 ${alignCls} mb-14 ${className}`}>
       <Reveal>
         <span className="t-label inline-flex items-center gap-3 text-gold-500">
           <span className="h-px w-8 bg-gold-600/60" />

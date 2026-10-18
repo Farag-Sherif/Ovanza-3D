@@ -1,4 +1,4 @@
-﻿import axiosInstance, { cdnUrl } from "./client";
+import axiosInstance, { cdnUrl } from "./client";
 
 /* ------------------------------------------------------------------
    API â†’ ENTITY MAP (existing backend contract â€” read-only)
@@ -137,12 +137,19 @@ export async function fetchSettings(locale: string): Promise<RawSettings | null>
   return { ...s, about_us: tr(s.translations, "about_us", locale) || s.about_us };
 }
 
+function resolveBrandUrl(b?: Partial<RawBrand> | null): string | null {
+  const raw = b?.url?.trim();
+  if (!raw) return null;
+  return /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+}
+
 export async function fetchBrands(locale: string): Promise<RawBrand[]> {
   const { data } = await axiosInstance.get("/cafes");
   const list = Array.isArray(data) ? data : [];
   return list.map((b: RawBrand) => ({
     ...b,
     name: tr(b.translations, "name", locale) || b.name,
+    url: resolveBrandUrl(b),
     logo_path: cdnUrl(b.logo) || b.logo_path,
     cover: cdnUrl(b.cover),
   }));
@@ -180,7 +187,12 @@ export async function fetchProducts(locale: string): Promise<RawProduct[]> {
         image_path: cdnUrl(p.image) || p.image_path,
         media: p.media?.map((m) => ({ ...m, image_path: cdnUrl(m.image) || m.image_path })),
         category: p.category
-          ? { ...p.category, name: tr(p.category.translations, "name", locale) || p.category.name, logo_path: cdnUrl(p.category.logo) || p.category.logo_path }
+          ? {
+              ...p.category,
+              name: tr(p.category.translations, "name", locale) || p.category.name,
+              url: resolveBrandUrl(p.category),
+              logo_path: cdnUrl(p.category.logo) || p.category.logo_path,
+            }
           : undefined,
       };
     });

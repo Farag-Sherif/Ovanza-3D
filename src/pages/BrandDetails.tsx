@@ -1,7 +1,7 @@
 import { useMemo, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowUpLeft, ArrowUpRight, Download, Globe, Mail, MessageCircle, Phone } from "lucide-react";
+import { ArrowUpLeft, ArrowUpRight, Download, Globe, Mail, MessageCircle, Phone, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useBrands, useProducts, useSettings, useSocials } from "../hooks/useApi";
 import { Reveal, Img, Loader, ErrorState, EmptyState, SectionHead } from "../components/ui";
@@ -74,6 +74,22 @@ export default function BrandDetails() {
               {brandProducts.length} {t("brands.products_count")} · Ovanza {t("brands.label")}
             </p>
           </Reveal>
+          {brand.url && (
+            <Reveal delay={0.4}>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <a
+                  href={brand.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary shadow-[0_12px_36px_-8px_rgba(212,169,92,0.65)]"
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  <span>{t("brands.shop")}</span>
+                  {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
+                </a>
+              </div>
+            </Reveal>
+          )}
         </motion.div>
       </section>
 
@@ -95,7 +111,23 @@ export default function BrandDetails() {
       {/* ---------- Product Collection ---------- */}
       <section className="relative py-24">
         <div className="container-ov">
-          <SectionHead label={brand.name} title={t("brands.collection")} align="start" />
+          <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
+            <SectionHead label={brand.name} title={t("brands.collection")} align="start" className="!mb-0" />
+            {brand.url && (
+              <Reveal>
+                <a
+                  href={brand.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary"
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  <span>{t("brands.shop")}</span>
+                  {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
+                </a>
+              </Reveal>
+            )}
+          </div>
           {brandProducts.length === 0 ? (
             <EmptyState message={t("brands.no_products")} />
           ) : (
@@ -138,7 +170,8 @@ export default function BrandDetails() {
             )}
             {brand.url && (
               <a href={brand.url} target="_blank" rel="noopener noreferrer" className="btn-primary">
-                <Globe className="h-4 w-4" /> {t("brands.visit")}
+                <ShoppingBag className="h-4 w-4" /> {t("brands.shop")}
+                {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
               </a>
             )}
             {settings?.about_file_path && (

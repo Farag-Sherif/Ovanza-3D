@@ -1,4 +1,4 @@
-﻿import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   fetchSettings, fetchBrands, fetchCategories, fetchProducts,
   fetchSocials, fetchPartners, fetchBlogs, fetchEvents, fetchEventById,

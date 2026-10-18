@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowUpLeft, ArrowUpRight } from "lucide-react";
+import { ArrowUpLeft, ArrowUpRight, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useBrands, useProducts } from "../hooks/useApi";
 import { Reveal, PageHero, Img, Loader, ErrorState, EmptyState } from "../components/ui";
@@ -30,10 +30,12 @@ export default function Brands() {
             <div className="grid gap-6 md:grid-cols-2">
               {brands.map((b, i) => (
                 <Reveal key={b.id} delay={Math.min(i * 0.07, 0.4)}>
-                  <Link
-                    to={`/brands/${b.slug}`}
-                    className="card-surface group relative flex h-full flex-col overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:border-gold-500/40"
-                  >
+                  <div className="card-surface group relative flex h-full flex-col overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:border-gold-500/40">
+                    <Link
+                      to={`/brands/${b.slug}`}
+                      aria-label={b.name}
+                      className="absolute inset-0 z-10"
+                    />
                     <div className="relative h-64 overflow-hidden bg-espresso-900/60 md:h-72">
                       <Img
                         src={b.cover || b.logo_path}
@@ -52,12 +54,27 @@ export default function Brands() {
                       <span className="t-small mt-2 text-cream-300/60">
                         {countFor(b.id)} {t("brands.products_count")}
                       </span>
-                      <span className="t-body mt-auto inline-flex items-center gap-2 pt-6 font-bold text-gold-400">
-                        {t("brands.explore")}
-                        {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
-                      </span>
+                      <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-6">
+                        <span className="t-body inline-flex items-center gap-2 font-bold text-gold-400">
+                          {t("brands.explore")}
+                          {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
+                        </span>
+                        {b.url && (
+                          <a
+                            href={b.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="btn-primary relative z-20 !px-5 !py-2.5 !text-xs shadow-[0_8px_24px_-6px_rgba(212,169,92,0.55)]"
+                          >
+                            <ShoppingBag className="h-4 w-4" />
+                            <span>{t("brands.shop")}</span>
+                            {dir === "rtl" ? <ArrowUpLeft className="h-3.5 w-3.5" /> : <ArrowUpRight className="h-3.5 w-3.5" />}
+                          </a>
+                        )}
+                      </div>
                     </div>
-                  </Link>
+                  </div>
                 </Reveal>
               ))}
             </div>

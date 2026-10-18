@@ -1,7 +1,7 @@
 import { Suspense, lazy, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { ArrowUpLeft, ArrowUpRight, ChevronDown, Eye, Target, Sparkles, ShieldCheck, TrendingUp, Handshake, Lightbulb, Truck, Globe2, CalendarDays } from "lucide-react";
+import { ArrowUpLeft, ArrowUpRight, ChevronDown, Eye, Target, Sparkles, ShieldCheck, TrendingUp, Handshake, Lightbulb, Truck, Globe2, CalendarDays, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSettings, useBrands, useProducts, useEvents } from "../hooks/useApi";
 import { Reveal, SectionHead, Counter, Img, Loader, ErrorState, EmptyState } from "../components/ui";
@@ -324,20 +324,37 @@ export function BrandsStrip() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {brands.map((b, i) => (
               <Reveal key={b.id} delay={Math.min(i * 0.06, 0.4)}>
-                <Link
-                  to={`/brands/${b.slug}`}
-                  className="card-surface group relative flex h-full flex-col overflow-hidden rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 hover:border-gold-500/40"
-                >
+                <div className="card-surface group relative flex h-full flex-col overflow-hidden rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 hover:border-gold-500/40">
+                  <Link
+                    to={`/brands/${b.slug}`}
+                    aria-label={b.name}
+                    className="absolute inset-0 z-10"
+                  />
                   <div className="relative mb-8 flex h-36 items-center justify-center overflow-hidden rounded-2xl bg-espresso-900">
                     <Img src={b.logo_path} alt={b.name} className="h-full w-full object-contain p-6 transition-transform duration-700 group-hover:scale-110" />
                   </div>
                   <h3 className="t-h3 font-display mb-2 text-cream-50">{b.name}</h3>
-                  <span className="t-small mt-auto inline-flex items-center gap-2 pt-6 font-semibold text-gold-400">
-                    {t("brands.explore")}
-                    {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
-                  </span>
+                  <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-6">
+                    <span className="t-small inline-flex items-center gap-2 font-semibold text-gold-400">
+                      {t("brands.explore")}
+                      {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
+                    </span>
+                    {b.url && (
+                      <a
+                        href={b.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="btn-primary relative z-20 !px-5 !py-2.5 !text-xs shadow-[0_8px_24px_-6px_rgba(212,169,92,0.55)]"
+                      >
+                        <ShoppingBag className="h-4 w-4" />
+                        <span>{t("brands.shop")}</span>
+                        {dir === "rtl" ? <ArrowUpLeft className="h-3.5 w-3.5" /> : <ArrowUpRight className="h-3.5 w-3.5" />}
+                      </a>
+                    )}
+                  </div>
                   <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(212,169,92,0.12),transparent_65%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                </Link>
+                </div>
               </Reveal>
             ))}
           </div>

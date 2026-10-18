@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowUpLeft, ArrowUpRight, Package, Ruler, MapPin, Send } from "lucide-react";
+import { ArrowUpLeft, ArrowUpRight, Package, Send, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useProducts, useSettings } from "../hooks/useApi";
+import { useProducts } from "../hooks/useApi";
 import { Reveal, Img, Loader, ErrorState, EmptyState, SectionHead } from "../components/ui";
 import { stripHtml } from "../api/client";
 
@@ -10,7 +10,6 @@ export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const { data: products, isLoading, isError, refetch } = useProducts();
-  const { data: settings } = useSettings();
 
   const product = useMemo(
     () => products?.find((p) => String(p.id) === id),
@@ -69,11 +68,22 @@ export default function ProductDetails() {
               </Reveal>
             )}
 
-
-
             <Reveal delay={0.35}>
               <div className="mt-10 flex flex-wrap gap-4">
-                <Link to="/contact" className="btn-primary">
+                {product.category?.url && (
+                  <a
+                    href={product.category.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary shadow-[0_12px_36px_-8px_rgba(212,169,92,0.65)]"
+                  >
+                    <ShoppingBag className="h-4 w-4" />
+                    <span>{t("brands.shop")}</span>
+                    <ArrowUpRight className="h-4 w-4 rtl:hidden" />
+                    <ArrowUpLeft className="h-4 w-4 ltr:hidden" />
+                  </a>
+                )}
+                <Link to="/contact" className={product.category?.url ? "btn-ghost" : "btn-primary"}>
                   <Send className="h-4 w-4" /> {t("products.request_info")}
                 </Link>
                 {product.category?.slug && (
