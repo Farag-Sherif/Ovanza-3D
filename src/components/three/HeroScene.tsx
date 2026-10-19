@@ -265,7 +265,7 @@ function WithoutUpJarModel(props: any) {
 function ColoniaBottleModel(props: any) {
   const parts = useModelParts("/assets/models/colonia-bottle.glb");
   const [labelTex, bandTex] = useGltfTextures([
-    "/assets/colonia/label-06.png",
+    "/assets/colonia/label-03.png",
     "/assets/colonia/band.png",
   ]);
 
@@ -343,13 +343,15 @@ function ColoniaBottleModel(props: any) {
         if (p.matName === "Material.004") {
           // Front cologne wrap label ("lable.001")
           return (
-            <mesh key={idx} geometry={p.geometry} renderOrder={3}>
+            <mesh key={idx} geometry={p.geometry} renderOrder={4}>
               <meshStandardMaterial
                 map={labelTex}
                 roughness={0.2}
                 metalness={0.15}
                 transparent
                 alphaTest={0.05}
+                depthWrite={false}
+                side={THREE.DoubleSide}
               />
             </mesh>
           );
@@ -433,8 +435,16 @@ function PumpBottleModel(props: any) {
         if (p.matName === "Material.012") {
           // Wrap-around shaving gel bottle label ("laple")
           return (
-            <mesh key={idx} geometry={p.geometry} renderOrder={3}>
-              <meshStandardMaterial map={shavingTex} roughness={0.2} metalness={0.1} />
+            <mesh key={idx} geometry={p.geometry} renderOrder={4}>
+              <meshStandardMaterial
+                map={shavingTex}
+                roughness={0.2}
+                metalness={0.1}
+                transparent
+                alphaTest={0.05}
+                depthWrite={false}
+                side={THREE.DoubleSide}
+              />
             </mesh>
           );
         }

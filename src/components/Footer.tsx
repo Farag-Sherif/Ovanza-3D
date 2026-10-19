@@ -51,6 +51,7 @@ export default function Footer() {
           <ul className="flex flex-col gap-3">
             <li><Link className="u-sweep t-small text-cream-300/80" to="/about">{t("nav.about")}</Link></li>
             <li><Link className="u-sweep t-small text-cream-300/80" to="/brands">{t("nav.brands")}</Link></li>
+            <li><Link className="u-sweep t-small text-cream-300/80" to="/blog">{t("nav.blog")}</Link></li>
             <li><Link className="u-sweep t-small text-cream-300/80" to="/events">{t("nav.events")}</Link></li>
             <li><Link className="u-sweep t-small text-cream-300/80" to="/careers">{t("nav.careers")}</Link></li>
           </ul>

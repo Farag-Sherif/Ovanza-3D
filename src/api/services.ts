@@ -98,6 +98,13 @@ export interface RawPartner {
   image_path: string | null;
 }
 
+export interface RawEventImage {
+  id?: number;
+  event_id?: number;
+  image: string;
+  image_path?: string | null;
+}
+
 export interface RawEvent {
   id: number;
   title: string;
@@ -108,6 +115,9 @@ export interface RawEvent {
   created_at: string;
   date: string;
   translations?: Translation[];
+  images?: RawEventImage[];
+  media?: RawEventImage[];
+  gallery?: RawEventImage[];
 }
 
 export interface RawBlog {
@@ -212,6 +222,21 @@ export async function fetchPartners(): Promise<RawPartner[]> {
   return Array.isArray(data) ? data : [];
 }
 
+function normalizeEventImages(imagesList: any): RawEventImage[] {
+  if (!Array.isArray(imagesList)) return [];
+  return imagesList.map((item: any) => {
+    if (typeof item === "string") {
+      return { image: item, image_path: cdnUrl(item) };
+    }
+    const img = item?.image || item?.image_path || item?.url || "";
+    return {
+      ...item,
+      image: img,
+      image_path: cdnUrl(img) || item?.image_path || item?.url,
+    };
+  });
+}
+
 export async function fetchEvents(locale: string): Promise<RawEvent[]> {
   const { data } = await axiosInstance.get("/events");
   const list = Array.isArray(data) ? data : (data?.data ?? []);
@@ -220,6 +245,7 @@ export async function fetchEvents(locale: string): Promise<RawEvent[]> {
     title: tr(e.translations, "title", locale) || e.title,
     description: tr(e.translations, "description", locale) || e.description,
     image_path: cdnUrl(e.image) || e.image_path,
+    images: normalizeEventImages(e.images || e.media || e.gallery || e.event_images),
   }));
 }
 
@@ -232,6 +258,7 @@ export async function fetchEventById(id: string | number, locale: string): Promi
     title: tr(e.translations, "title", locale) || e.title,
     description: tr(e.translations, "description", locale) || e.description,
     image_path: cdnUrl(e.image) || e.image_path,
+    images: normalizeEventImages(e.images || e.media || e.gallery || e.event_images),
   };
 }
 
@@ -242,7 +269,20 @@ export async function fetchBlogs(locale: string): Promise<RawBlog[]> {
     ...b,
     title: tr(b.translations, "title", locale) || b.title,
     content: tr(b.translations, "content", locale) || b.content,
+    image_path: cdnUrl(b.image) || b.image_path,
   }));
+}
+
+export async function fetchBlogById(id: string | number, locale: string): Promise<RawBlog | null> {
+  const { data } = await axiosInstance.get(`/blog/${id}`);
+  const b = data?.data ?? data;
+  if (!b) return null;
+  return {
+    ...b,
+    title: tr(b.translations, "title", locale) || b.title,
+    content: tr(b.translations, "content", locale) || b.content,
+    image_path: cdnUrl(b.image) || b.image_path,
+  };
 }
 
 /* Existing contact endpoint â€” payload contract preserved exactly */

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   fetchSettings, fetchBrands, fetchCategories, fetchProducts,
-  fetchSocials, fetchPartners, fetchBlogs, fetchEvents, fetchEventById,
+  fetchSocials, fetchPartners, fetchBlogs, fetchBlogById, fetchEvents, fetchEventById,
 } from "../api/services";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -30,6 +30,16 @@ export function useEvent(id: string | number | undefined) {
 }
 
 export const useBlogs = () => useLocalized(fetchBlogs);
+
+export function useBlog(id: string | number | undefined) {
+  const { language } = useLanguage();
+  return useQuery({
+    queryKey: ["blog", id, language],
+    queryFn: () => fetchBlogById(id!, language),
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+  });
+}
 
 export function useSocials() {
   return useQuery({ queryKey: ["socials"], queryFn: () => fetchSocials(), staleTime: Infinity });

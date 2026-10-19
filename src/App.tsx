@@ -12,6 +12,7 @@ const Brands = lazy(() => import("./pages/Brands"));
 const BrandDetails = lazy(() => import("./pages/BrandDetails"));
 const Products = lazy(() => import("./pages/Products"));
 const ProductDetails = lazy(() => import("./pages/ProductDetails"));
+const Blog = lazy(() => import("./pages/Blog"));
 const Events = lazy(() => import("./pages/Events"));
 const Export = lazy(() => import("./pages/Export"));
 const Careers = lazy(() => import("./pages/Careers"));
@@ -53,6 +54,8 @@ function AnimatedRoutes() {
           <Route path="/brands/:slug" element={<BrandDetails />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetails />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<Blog />} />
           <Route path="/events" element={<Events />} />
           <Route path="/events/:id" element={<Events />} />
           <Route path="/export" element={<Export />} />
