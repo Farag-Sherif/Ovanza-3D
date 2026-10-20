@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X, ArrowUpLeft, ArrowUpRight, Download } from "lucide-react";
+import { Menu, X, ArrowUpLeft, ArrowUpRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../context/LanguageContext";
 import { useSettings } from "../hooks/useApi";
@@ -13,7 +13,6 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const profileUrl = settings?.about_file_path || "/assets/ovanza-company-profile.pdf";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -90,19 +89,6 @@ export default function Header() {
               {language === "ar" ? "EN" : "ع"}
             </button>
 
-            {/* Company profile download */}
-            <a
-              href={profileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              title={t("nav.download_profile")}
-              aria-label={t("nav.download_profile")}
-              className="glass inline-flex items-center justify-center rounded-full border border-white/10 p-2.5 text-cream-100 transition-colors hover:border-gold-500/60 hover:text-gold-300"
-            >
-              <Download className="h-4 w-4" />
-            </a>
-
             {/* CTA */}
             <Link to="/contact" className="btn-primary !hidden !py-2.5 !px-6 text-sm xl:!inline-flex whitespace-nowrap">
               {t("nav.partner")}
@@ -156,19 +142,8 @@ export default function Header() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="mt-8 flex flex-col sm:flex-row gap-3"
+                className="mt-8 flex gap-4"
               >
-                <a
-                  href={profileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                  onClick={() => setOpen(false)}
-                  className="glass flex items-center justify-center gap-2 rounded-full border border-gold-500/40 py-3 px-6 text-sm font-semibold text-cream-100 hover:border-gold-500 hover:text-gold-300 transition-colors"
-                >
-                  <Download className="h-4 w-4 text-gold-400" />
-                  <span>{t("nav.download_profile")}</span>
-                </a>
                 <Link to="/contact" className="btn-primary flex-1">{t("nav.partner")}</Link>
               </motion.div>
             </div>

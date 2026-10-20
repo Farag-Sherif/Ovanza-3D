@@ -1,17 +1,26 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MessageCircle, Send, Globe } from "lucide-react";
+import { MessageCircle, Send, Globe, Download } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { ReactNode } from "react";
-import { useSocials } from "../hooks/useApi";
+import { useSocials, useSettings } from "../hooks/useApi";
 
 export default function StickyActions() {
   const { t } = useTranslation();
   const { data: socials } = useSocials();
+  const { data: settings } = useSettings();
 
   const wa = socials?.find((s) => s.url?.includes("whatsapp"));
+  const profileUrl = settings?.about_file_path || "/assets/ovanza-company-profile.pdf";
 
   const actions = [
+    {
+      label: t("actions.download_profile"),
+      href: profileUrl,
+      icon: <Download className="h-5 w-5" />,
+      isDownload: true,
+      highlight: true,
+    },
     wa?.url && {
       label: t("actions.whatsapp"),
       href: wa.url,
@@ -19,7 +28,13 @@ export default function StickyActions() {
     },
     { label: t("actions.contact"), href: "/contact", icon: <Send className="h-5 w-5" /> },
     { label: t("actions.export"), href: "/export", icon: <Globe className="h-5 w-5" /> },
-  ].filter(Boolean) as { label: string; href: string; icon: ReactNode }[];
+  ].filter(Boolean) as {
+    label: string;
+    href: string;
+    icon: ReactNode;
+    isDownload?: boolean;
+    highlight?: boolean;
+  }[];
 
   return (
     <motion.aside
@@ -30,18 +45,29 @@ export default function StickyActions() {
       aria-label="Quick actions"
     >
       {actions.map((a, i) =>
-        a.href.startsWith("http") ? (
+        a.isDownload || a.href.startsWith("http") ? (
           <a
             key={i}
             href={a.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="group glass pointer-events-auto flex items-center gap-3 rounded-full border border-white/10 py-3 ltr:pr-4 ltr:pl-3 rtl:pr-3 rtl:pl-4 shadow-2xl transition-all duration-500 hover:border-gold-500/60"
+            download={a.isDownload ? true : undefined}
+            className={`group glass pointer-events-auto flex items-center gap-3 rounded-full border py-3 ltr:pr-4 ltr:pl-3 rtl:pr-3 rtl:pl-4 shadow-2xl transition-all duration-500 ${
+              a.highlight
+                ? "border-gold-500/40 bg-gold-500/10 hover:border-gold-400 hover:bg-gold-500/20"
+                : "border-white/10 hover:border-gold-500/60"
+            }`}
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gold-500/15 text-gold-400 transition-colors group-hover:bg-gold-500 group-hover:text-espresso-950">
+            <span
+              className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors ${
+                a.highlight
+                  ? "bg-gold-500 text-espresso-950 shadow-[0_0_15px_rgba(212,169,92,0.4)] group-hover:scale-105"
+                  : "bg-gold-500/15 text-gold-400 group-hover:bg-gold-500 group-hover:text-espresso-950"
+              }`}
+            >
               {a.icon}
             </span>
-            <span className="t-small max-w-0 overflow-hidden font-semibold whitespace-nowrap text-cream-100 opacity-0 transition-all duration-500 group-hover:max-w-[120px] group-hover:opacity-100">
+            <span className="t-small max-w-0 overflow-hidden font-semibold whitespace-nowrap text-cream-100 opacity-0 transition-all duration-500 group-hover:max-w-[130px] group-hover:opacity-100">
               {a.label}
             </span>
           </a>

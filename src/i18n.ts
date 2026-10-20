@@ -213,6 +213,7 @@ const ar = {
     empty: "لا يوجد محتوى لعرضه حالياً",
   },
   actions: {
+    download_profile: "ملف الشركة",
     whatsapp: "واتساب",
     contact: "تواصل",
     export: "تصدير",
@@ -431,6 +432,7 @@ const en: typeof ar = {
     empty: "No content to display yet",
   },
   actions: {
+    download_profile: "Company Profile",
     whatsapp: "WhatsApp",
     contact: "Contact",
     export: "Export",

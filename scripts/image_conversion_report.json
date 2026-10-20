@@ -1,0 +1,289 @@
+{
+  "totalImages": 40,
+  "totalOriginalBytes": 14967540,
+  "totalWebpBytes": 3580562,
+  "totalSavedBytes": 11386978,
+  "totalSavedPercent": 76.08,
+  "items": [
+    {
+      "original": "colonia/band.png",
+      "webp": "colonia/band.webp",
+      "origSize": 10347,
+      "webpSize": 7256,
+      "savingsPercent": "29.9"
+    },
+    {
+      "original": "colonia/label-01.png",
+      "webp": "colonia/label-01.webp",
+      "origSize": 224505,
+      "webpSize": 125364,
+      "savingsPercent": "44.2"
+    },
+    {
+      "original": "colonia/label-02.png",
+      "webp": "colonia/label-02.webp",
+      "origSize": 225346,
+      "webpSize": 123756,
+      "savingsPercent": "45.1"
+    },
+    {
+      "original": "colonia/label-03.png",
+      "webp": "colonia/label-03.webp",
+      "origSize": 228573,
+      "webpSize": 125544,
+      "savingsPercent": "45.1"
+    },
+    {
+      "original": "colonia/label-04.png",
+      "webp": "colonia/label-04.webp",
+      "origSize": 225445,
+      "webpSize": 122176,
+      "savingsPercent": "45.8"
+    },
+    {
+      "original": "colonia/label-05.png",
+      "webp": "colonia/label-05.webp",
+      "origSize": 208641,
+      "webpSize": 112962,
+      "savingsPercent": "45.9"
+    },
+    {
+      "original": "colonia/label-06.png",
+      "webp": "colonia/label-06.webp",
+      "origSize": 231505,
+      "webpSize": 128016,
+      "savingsPercent": "44.7"
+    },
+    {
+      "original": "colonia/label.png",
+      "webp": "colonia/label.webp",
+      "origSize": 54986,
+      "webpSize": 30766,
+      "savingsPercent": "44.0"
+    },
+    {
+      "original": "jar-cream/side-black.jpg",
+      "webp": "jar-cream/side-black.webp",
+      "origSize": 1607776,
+      "webpSize": 286556,
+      "savingsPercent": "82.2"
+    },
+    {
+      "original": "jar-cream/side-blue.jpg",
+      "webp": "jar-cream/side-blue.webp",
+      "origSize": 1992188,
+      "webpSize": 311914,
+      "savingsPercent": "84.3"
+    },
+    {
+      "original": "jar-cream/side-pink.jpg",
+      "webp": "jar-cream/side-pink.webp",
+      "origSize": 1578580,
+      "webpSize": 276316,
+      "savingsPercent": "82.5"
+    },
+    {
+      "original": "jar-cream/side-yellow.jpg",
+      "webp": "jar-cream/side-yellow.webp",
+      "origSize": 1931874,
+      "webpSize": 301214,
+      "savingsPercent": "84.4"
+    },
+    {
+      "original": "jar-cream/top-black.jpg",
+      "webp": "jar-cream/top-black.webp",
+      "origSize": 86164,
+      "webpSize": 11574,
+      "savingsPercent": "86.6"
+    },
+    {
+      "original": "jar-cream/top-blue.jpg",
+      "webp": "jar-cream/top-blue.webp",
+      "origSize": 46822,
+      "webpSize": 18178,
+      "savingsPercent": "61.2"
+    },
+    {
+      "original": "jar-cream/top-pink.jpg",
+      "webp": "jar-cream/top-pink.webp",
+      "origSize": 69980,
+      "webpSize": 6532,
+      "savingsPercent": "90.7"
+    },
+    {
+      "original": "jar-cream/top-yellow.jpg",
+      "webp": "jar-cream/top-yellow.webp",
+      "origSize": 148888,
+      "webpSize": 16004,
+      "savingsPercent": "89.3"
+    },
+    {
+      "original": "shaving/label-01.png",
+      "webp": "shaving/label-01.webp",
+      "origSize": 364835,
+      "webpSize": 183480,
+      "savingsPercent": "49.7"
+    },
+    {
+      "original": "shaving/label-02.png",
+      "webp": "shaving/label-02.webp",
+      "origSize": 367268,
+      "webpSize": 195276,
+      "savingsPercent": "46.8"
+    },
+    {
+      "original": "spider-wax/side-label.png",
+      "webp": "spider-wax/side-label.webp",
+      "origSize": 198412,
+      "webpSize": 27776,
+      "savingsPercent": "86.0"
+    },
+    {
+      "original": "spider-wax/top-label.png",
+      "webp": "spider-wax/top-label.webp",
+      "origSize": 1048046,
+      "webpSize": 126168,
+      "savingsPercent": "88.0"
+    },
+    {
+      "original": "star-seven/body.png",
+      "webp": "star-seven/body.webp",
+      "origSize": 242334,
+      "webpSize": 27500,
+      "savingsPercent": "88.7"
+    },
+    {
+      "original": "star-seven/Hair WAX premium metal-03.png",
+      "webp": "star-seven/Hair WAX premium metal-03.webp",
+      "origSize": 58430,
+      "webpSize": 30758,
+      "savingsPercent": "47.4"
+    },
+    {
+      "original": "star-seven/Hair WAX premium metal-04.png",
+      "webp": "star-seven/Hair WAX premium metal-04.webp",
+      "origSize": 57895,
+      "webpSize": 28624,
+      "savingsPercent": "50.6"
+    },
+    {
+      "original": "star-seven/Hair WAX premium metal-05.png",
+      "webp": "star-seven/Hair WAX premium metal-05.webp",
+      "origSize": 693796,
+      "webpSize": 67578,
+      "savingsPercent": "90.3"
+    },
+    {
+      "original": "star-seven/Hair WAX premium metal-06.png",
+      "webp": "star-seven/Hair WAX premium metal-06.webp",
+      "origSize": 51201,
+      "webpSize": 37470,
+      "savingsPercent": "26.8"
+    },
+    {
+      "original": "star-seven/Hair WAX premium metal-07.png",
+      "webp": "star-seven/Hair WAX premium metal-07.webp",
+      "origSize": 59013,
+      "webpSize": 40510,
+      "savingsPercent": "31.4"
+    },
+    {
+      "original": "star-seven/Hair WAX premium metal-08.png",
+      "webp": "star-seven/Hair WAX premium metal-08.webp",
+      "origSize": 778939,
+      "webpSize": 86554,
+      "savingsPercent": "88.9"
+    },
+    {
+      "original": "star-seven/Hair WAX premium metal-09.png",
+      "webp": "star-seven/Hair WAX premium metal-09.webp",
+      "origSize": 665977,
+      "webpSize": 96374,
+      "savingsPercent": "85.5"
+    },
+    {
+      "original": "star-seven/Hair WAX premium metal-10.png",
+      "webp": "star-seven/Hair WAX premium metal-10.webp",
+      "origSize": 46786,
+      "webpSize": 39472,
+      "savingsPercent": "15.6"
+    },
+    {
+      "original": "star-seven/Hair WAX premium metal-11.png",
+      "webp": "star-seven/Hair WAX premium metal-11.webp",
+      "origSize": 59349,
+      "webpSize": 41768,
+      "savingsPercent": "29.6"
+    },
+    {
+      "original": "star-seven/lid-side.jpg",
+      "webp": "star-seven/lid-side.webp",
+      "origSize": 16361,
+      "webpSize": 7750,
+      "savingsPercent": "52.6"
+    },
+    {
+      "original": "star-seven/top.png",
+      "webp": "star-seven/top.webp",
+      "origSize": 487704,
+      "webpSize": 37846,
+      "savingsPercent": "92.2"
+    },
+    {
+      "original": "wax-black/body.png",
+      "webp": "wax-black/body.webp",
+      "origSize": 287878,
+      "webpSize": 107570,
+      "savingsPercent": "62.6"
+    },
+    {
+      "original": "wax-black/bottom.png",
+      "webp": "wax-black/bottom.webp",
+      "origSize": 41349,
+      "webpSize": 24534,
+      "savingsPercent": "40.7"
+    },
+    {
+      "original": "wax-black/lid-side.png",
+      "webp": "wax-black/lid-side.webp",
+      "origSize": 52368,
+      "webpSize": 28624,
+      "savingsPercent": "45.3"
+    },
+    {
+      "original": "wax-black/top.png",
+      "webp": "wax-black/top.webp",
+      "origSize": 70158,
+      "webpSize": 30670,
+      "savingsPercent": "56.3"
+    },
+    {
+      "original": "wax-red/body.png",
+      "webp": "wax-red/body.webp",
+      "origSize": 244220,
+      "webpSize": 162746,
+      "savingsPercent": "33.4"
+    },
+    {
+      "original": "wax-red/bottom.png",
+      "webp": "wax-red/bottom.webp",
+      "origSize": 93906,
+      "webpSize": 65232,
+      "savingsPercent": "30.5"
+    },
+    {
+      "original": "wax-red/lid-side.png",
+      "webp": "wax-red/lid-side.webp",
+      "origSize": 53328,
+      "webpSize": 39350,
+      "savingsPercent": "26.2"
+    },
+    {
+      "original": "wax-red/top.png",
+      "webp": "wax-red/top.webp",
+      "origSize": 56367,
+      "webpSize": 42804,
+      "savingsPercent": "24.1"
+    }
+  ]
+}
