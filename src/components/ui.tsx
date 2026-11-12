@@ -106,15 +106,35 @@ export function Img({
   src,
   alt,
   className = "",
+  imgClassName = "",
+  fit,
   eager = false,
 }: {
   src: string | null | undefined;
   alt: string;
   className?: string;
+  imgClassName?: string;
+  fit?: "cover" | "contain" | "fill" | "none" | "scale-down";
   eager?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
+
+  const isContain = fit === "contain" || className.includes("object-contain");
+  const isFill = fit === "fill" || className.includes("object-fill");
+  const isNone = fit === "none" || className.includes("object-none");
+  const isScaleDown = fit === "scale-down" || className.includes("object-scale-down");
+
+  const fitClass = isContain
+    ? "object-contain"
+    : isFill
+    ? "object-fill"
+    : isNone
+    ? "object-none"
+    : isScaleDown
+    ? "object-scale-down"
+    : "object-cover";
+
   if (!src || failed) {
     return (
       <div
@@ -135,7 +155,9 @@ export function Img({
         decoding="async"
         onLoad={() => setLoaded(true)}
         onError={() => setFailed(true)}
-        className={`h-full w-full object-cover transition-all duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
+        className={`h-full w-full ${fitClass} transition-all duration-700 ${
+          loaded ? "opacity-100" : "opacity-0"
+        } ${imgClassName}`}
       />
     </div>
   );

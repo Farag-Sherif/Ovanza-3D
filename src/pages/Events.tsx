@@ -52,15 +52,21 @@ function EventGallery({ images, title }: { images: string[]; title: string }) {
     return (
       <>
         <div
-          className="relative mt-12 overflow-hidden rounded-3xl group cursor-pointer shadow-2xl border border-white/10"
+          className="relative mt-12 overflow-hidden rounded-3xl group cursor-pointer shadow-2xl border border-white/10 bg-espresso-950/90 aspect-video w-full flex items-center justify-center"
           onClick={() => setLightboxOpen(true)}
         >
+          {images[0] && (
+            <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-25 blur-2xl scale-110">
+              <img src={images[0]} alt="" className="h-full w-full object-cover" />
+            </div>
+          )}
           <Img
             src={images[0]}
             alt={title}
-            className="aspect-video w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            fit="contain"
+            className="relative z-10 h-full w-full object-contain p-2 sm:p-4 transition-transform duration-700 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <div className="absolute inset-0 z-20 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <span className="glass rounded-full p-3.5 text-cream-100 shadow-xl border border-white/20">
               <Maximize2 className="h-5 w-5" />
             </span>
@@ -94,16 +100,25 @@ function EventGallery({ images, title }: { images: string[]; title: string }) {
   return (
     <div className="mt-12 space-y-4">
       {/* Main Viewport */}
-      <div className="relative aspect-video w-full overflow-hidden rounded-3xl card-surface group shadow-2xl border border-white/10">
+      <div className="relative aspect-video w-full overflow-hidden rounded-3xl card-surface group shadow-2xl border border-white/10 bg-espresso-950/90 flex items-center justify-center">
+        {/* Subtle ambient blurred background */}
+        {images[activeIdx] && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-25 blur-2xl scale-110 transition-all duration-700">
+            <img src={images[activeIdx]} alt="" className="h-full w-full object-cover" />
+          </div>
+        )}
+
         <Img
+          key={activeIdx}
           src={images[activeIdx]}
           alt={`${title} - ${activeIdx + 1}`}
-          className="h-full w-full object-cover transition-transform duration-500 cursor-pointer"
+          fit="contain"
+          className="relative z-10 h-full w-full object-contain p-2 sm:p-4 transition-transform duration-500 cursor-pointer"
           onClick={() => setLightboxOpen(true)}
         />
 
         {/* Counter Badge */}
-        <div className="absolute top-4 ltr:left-4 rtl:right-4 z-10">
+        <div className="absolute top-4 ltr:left-4 rtl:right-4 z-20">
           <span className="glass inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-xs font-bold text-cream-100 shadow-lg backdrop-blur-md">
             <Images className="h-3.5 w-3.5 text-gold-400" />
             <span>{activeIdx + 1} / {images.length}</span>
@@ -113,14 +128,14 @@ function EventGallery({ images, title }: { images: string[]; title: string }) {
         {/* Fullscreen Expand Button */}
         <button
           onClick={() => setLightboxOpen(true)}
-          className="absolute top-4 ltr:right-4 rtl:left-4 z-10 glass rounded-full p-2.5 text-cream-100 hover:text-gold-300 border border-white/15 shadow-lg transition-colors"
+          className="absolute top-4 ltr:right-4 rtl:left-4 z-20 glass rounded-full p-2.5 text-cream-100 hover:text-gold-300 border border-white/15 shadow-lg transition-colors"
           aria-label="Fullscreen view"
         >
           <Maximize2 className="h-4 w-4" />
         </button>
 
         {/* Navigation Arrows */}
-        <div className="absolute inset-y-0 inset-x-3 flex items-center justify-between pointer-events-none">
+        <div className="absolute inset-y-0 inset-x-3 flex items-center justify-between pointer-events-none z-20">
           <button
             onClick={(e) => { e.stopPropagation(); prev(); }}
             className="pointer-events-auto glass rounded-full p-3 text-cream-100 hover:text-gold-300 border border-white/15 shadow-xl transition-all hover:scale-110 active:scale-95"
@@ -146,14 +161,14 @@ function EventGallery({ images, title }: { images: string[]; title: string }) {
             <button
               key={i}
               onClick={() => setActiveIdx(i)}
-              className={`relative h-16 w-24 sm:h-20 sm:w-28 shrink-0 overflow-hidden rounded-2xl transition-all duration-300 ${
+              className={`relative h-16 w-24 sm:h-20 sm:w-28 shrink-0 overflow-hidden rounded-2xl transition-all duration-300 bg-espresso-950/80 p-1 flex items-center justify-center ${
                 isActive
                   ? "ring-2 ring-gold-400 scale-105 shadow-[0_0_20px_rgba(212,169,92,0.4)]"
                   : "opacity-60 hover:opacity-100 border border-white/10"
               }`}
               aria-label={`Select photo ${i + 1}`}
             >
-              <Img src={img} alt={`thumb-${i}`} className="h-full w-full object-cover" />
+              <Img src={img} alt={`thumb-${i}`} fit="contain" className="h-full w-full object-contain" />
             </button>
           );
         })}
@@ -211,13 +226,13 @@ function EventGallery({ images, title }: { images: string[]; title: string }) {
               <button
                 key={i}
                 onClick={() => setActiveIdx(i)}
-                className={`relative h-12 w-16 sm:h-14 sm:w-20 shrink-0 overflow-hidden rounded-xl transition-all ${
+                className={`relative h-12 w-16 sm:h-14 sm:w-20 shrink-0 overflow-hidden rounded-xl transition-all bg-espresso-950/80 p-0.5 flex items-center justify-center ${
                   i === activeIdx
                     ? "ring-2 ring-gold-400 scale-105 shadow-lg"
                     : "opacity-40 hover:opacity-100 border border-white/10"
                 }`}
               >
-                <img src={img} alt={`thumb-${i}`} className="h-full w-full object-cover" />
+                <img src={img} alt={`thumb-${i}`} className="h-full w-full object-contain" />
               </button>
             ))}
           </div>
@@ -346,27 +361,41 @@ export default function Events() {
                         <Reveal key={b.id} delay={Math.min(i * 0.08, 0.3)}>
                           <Link
                             to={`/events/${b.id}`}
-                            className={`card-surface group grid overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:border-gold-500/40 md:grid-cols-[280px_1fr] ${
+                            className={`card-surface group flex flex-col md:flex-row items-stretch overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:border-gold-500/40 ${
                               i % 2 === 1 ? "md:ltr:ml-[8%]" : ""
                             }`}
                           >
-                            <div className="relative h-52 overflow-hidden md:h-full">
-                              <Img src={b.image_path} alt={b.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                            {/* Uniform Image Box: Identical dimensions across all event cards */}
+                            <div className="relative h-60 w-full sm:h-64 md:h-auto md:w-80 md:min-h-[240px] shrink-0 overflow-hidden bg-espresso-950/90 flex items-center justify-center p-3 sm:p-4 border-b md:border-b-0 md:border-r rtl:md:border-r-0 rtl:md:border-l border-white/5">
+                              {/* Subtle ambient blurred background */}
+                              {b.image_path && (
+                                <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20 blur-xl scale-125">
+                                  <img src={b.image_path} alt="" className="h-full w-full object-cover" />
+                                </div>
+                              )}
+                              <Img
+                                src={b.image_path}
+                                alt={b.title}
+                                fit="contain"
+                                className="relative z-10 h-full w-full max-h-56 md:max-h-60 object-contain transition-transform duration-700 group-hover:scale-105"
+                              />
                               {(b.images && b.images.length > 0) && (
-                                <span className="absolute top-3 ltr:right-3 rtl:left-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-gold-300 backdrop-blur-md border border-white/10 shadow-lg">
+                                <span className="absolute top-3 ltr:right-3 rtl:left-3 z-20 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-gold-300 backdrop-blur-md border border-white/10 shadow-lg">
                                   <Images className="h-3.5 w-3.5" />
                                   <span>{1 + b.images.length}</span>
                                 </span>
                               )}
                             </div>
-                            <div className="p-7">
-                              <span className="t-small inline-flex items-center gap-2 text-gold-400">
-                                <CalendarDays className="h-3.5 w-3.5" />
-                                {eventDate.toLocaleDateString(language === "ar" ? "ar-EG" : "en-GB", { year: "numeric", month: "long", day: "numeric" })}
-                              </span>
-                              <h3 className="t-h3 font-display mt-3 text-cream-50">{b.title}</h3>
-                              <p className="t-small mt-3 line-clamp-2 text-cream-300/70">{stripHtml(b.description).slice(0, 160)}</p>
-                              <span className="t-small mt-5 inline-flex items-center gap-2 font-bold text-gold-400">
+                            <div className="flex flex-1 flex-col justify-between p-6 sm:p-7 min-w-0">
+                              <div>
+                                <span className="t-small inline-flex items-center gap-2 text-gold-400">
+                                  <CalendarDays className="h-3.5 w-3.5" />
+                                  {eventDate.toLocaleDateString(language === "ar" ? "ar-EG" : "en-GB", { year: "numeric", month: "long", day: "numeric" })}
+                                </span>
+                                <h3 className="t-h3 font-display mt-3 text-cream-50">{b.title}</h3>
+                                <p className="t-small mt-3 line-clamp-3 text-cream-300/70">{stripHtml(b.description).slice(0, 180)}</p>
+                              </div>
+                              <span className="t-small mt-6 inline-flex items-center gap-2 font-bold text-gold-400">
                                 {t("events.read")} {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
                               </span>
                             </div>

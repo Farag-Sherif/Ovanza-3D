@@ -435,17 +435,33 @@ function EventsPreview() {
           <div className="grid gap-6 md:grid-cols-3">
             {eventsList.slice(0, 3).map((b, i) => (
               <Reveal key={b.id} delay={i * 0.08}>
-                <article className="card-surface group h-full overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:border-gold-500/40">
-                  <div className="relative h-52 overflow-hidden">
-                    <Img src={b.image_path} alt={b.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-108 group-hover:scale-110" />
-                  </div>
-                  <div className="p-6">
-                    <span className="t-small inline-flex items-center gap-2 text-gold-400">
-                      <CalendarDays className="h-3.5 w-3.5" />
-                      {(b.date ? new Date(b.date) : new Date(b.created_at)).toLocaleDateString(language === "ar" ? "ar-EG" : "en-GB", { year: "numeric", month: "long", day: "numeric" })}
-                    </span>
-                    <h3 className="t-h3 font-display mt-3 line-clamp-2 text-cream-50">{b.title}</h3>
-                    <p className="t-small mt-3 line-clamp-2 text-cream-300/70">{stripHtml(b.description).slice(0, 120)}</p>
+                <article className="card-surface group flex flex-col h-full overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:border-gold-500/40">
+                  <Link to={`/events/${b.id}`} className="block">
+                    <div className="relative h-56 w-full overflow-hidden bg-espresso-950/90 flex items-center justify-center p-3 border-b border-white/5">
+                      {b.image_path && (
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20 blur-xl scale-125">
+                          <img src={b.image_path} alt="" className="h-full w-full object-cover" />
+                        </div>
+                      )}
+                      <Img
+                        src={b.image_path}
+                        alt={b.title}
+                        fit="contain"
+                        className="relative z-10 h-full w-full object-contain transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </div>
+                  </Link>
+                  <div className="flex flex-1 flex-col justify-between p-6">
+                    <div>
+                      <span className="t-small inline-flex items-center gap-2 text-gold-400">
+                        <CalendarDays className="h-3.5 w-3.5" />
+                        {(b.date ? new Date(b.date) : new Date(b.created_at)).toLocaleDateString(language === "ar" ? "ar-EG" : "en-GB", { year: "numeric", month: "long", day: "numeric" })}
+                      </span>
+                      <Link to={`/events/${b.id}`}>
+                        <h3 className="t-h3 font-display mt-3 line-clamp-2 text-cream-50 hover:text-gold-300 transition-colors">{b.title}</h3>
+                      </Link>
+                      <p className="t-small mt-3 line-clamp-2 text-cream-300/70">{stripHtml(b.description).slice(0, 120)}</p>
+                    </div>
                   </div>
                 </article>
               </Reveal>
