@@ -42,7 +42,7 @@ const ar = {
     value_partnership: "الشراكة",
     egypt_label: "الوجود في مصر",
     egypt_title: "شبكة التوزيع",
-    egypt_text: "أسطول توزيع يغطي الجمهورية، يوصل منتجاتنا إلى آلاف نقاط البيع من المحافظ الكبرى إلى أصغر المحلات.",
+    egypt_text: "أسطول توزيع يغطي الجمهورية، يوصل منتجاتنا إلى آلاف نقاط البيع من المحافظات الكبرى إلى أصغر المحلات.",
     global_label: "الوجود الدولي",
     global_title: "أبعد من الحدود",
     global_text: "منذ 2018 ونحن نصدّر منتجاتنا إلى أسواق عربية وعالمية، ونتوسع عاماً بعد عام.",
@@ -119,6 +119,8 @@ const ar = {
     share: "مشاركة المقال",
     published: "نُشر في",
     all: "جميع المقالات",
+    explore_brands: "استكشف برانداتنا",
+    become_partner: "كن شريك أعمالنا",
   },
   export: {
     label: "التصدير",
@@ -338,6 +340,8 @@ const en: typeof ar = {
     share: "Share Article",
     published: "Published on",
     all: "All Articles",
+    explore_brands: "Explore Our Brands",
+    become_partner: "Become Our Business Partner",
   },
   export: {
     label: "Export",

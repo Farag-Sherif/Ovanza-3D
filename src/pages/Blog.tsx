@@ -79,13 +79,34 @@ export default function Blog() {
             {/* Featured Image */}
             {post.image_path && (
               <Reveal delay={0.1}>
-                <div className="mt-10 overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
+                <div className="group relative mt-10 overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
                   <Img
                     src={post.image_path}
                     alt={post.title}
                     className="aspect-video w-full object-cover"
                     eager
                   />
+
+                  {/* Bottom Image Overlay & Actions */}
+                  <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end bg-gradient-to-t from-espresso-950/95 via-espresso-950/50 to-transparent p-5 pt-20 sm:p-7 sm:pt-24 md:p-8 md:pt-28 pointer-events-none">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4 pointer-events-auto">
+                      <Link
+                        to="/brands"
+                        className="btn-primary !px-5 !py-2.5 sm:!px-6 sm:!py-3 !text-xs sm:!text-sm shadow-[0_8px_25px_-6px_rgba(212,169,92,0.6)]"
+                      >
+                        <span>{t("blog.explore_brands", "Explore Our Brands")}</span>
+                        {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
+                      </Link>
+
+                      <Link
+                        to="/contact"
+                        className="glass inline-flex items-center justify-center gap-2 rounded-full border border-gold-500/40 px-5 py-2.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-semibold text-cream-100 transition-all duration-300 hover:border-gold-400 hover:text-gold-300 hover:shadow-[0_8px_25px_-6px_rgba(212,169,92,0.3)] hover:-translate-y-0.5"
+                      >
+                        <span>{t("blog.become_partner", "Become Our Business Partner")}</span>
+                        {dir === "rtl" ? <ArrowUpLeft className="h-4 w-4 text-gold-400" /> : <ArrowUpRight className="h-4 w-4 text-gold-400" />}
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </Reveal>
             )}

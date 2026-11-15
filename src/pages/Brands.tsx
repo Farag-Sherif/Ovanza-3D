@@ -42,7 +42,7 @@ export default function Brands() {
                         alt={b.name}
                         className="h-full w-full object-cover transition-transform duration-[1.2s] group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-espresso-950 via-espresso-950/20 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-espresso-950/25 via-transparent to-transparent" />
                       {b.logo_path && (
                         <div className="glass absolute top-5 flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-white/10 ltr:left-5 rtl:right-5">
                           <img src={b.logo_path} alt="" className="h-full w-full object-contain p-2" loading="lazy" />
